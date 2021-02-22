@@ -4,7 +4,7 @@
     <RootNamespace>ObjAdoDBLib</RootNamespace>
     <TargetFrameworks>net20;net30;net35;net40;net45;</TargetFrameworks>
     <Authors>Seow Phong</Authors>
-    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Company>Seow Phong Studio</Company>
     <Copyright>Copyright (c) 2021 Seow Phong</Copyright>
     <PackageIcon>SeowPhongLogo.png</PackageIcon>
@@ -13,7 +13,7 @@
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed it in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.

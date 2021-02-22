@@ -1,5 +1,5 @@
 # ObjAdoDB
-#### [ÖÐÎÄÎÄµµ](https://github.com/PhongSeow/ObjAdoDB/blob/main/README.CN.md)
+#### [ä¸­æ–‡æ–‡æ¡£](https://github.com/PhongSeow/ObjAdoDB/blob/main/README.CN.md)
 This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.
