@@ -4,7 +4,7 @@
     <RootNamespace>ObjAdoDBLib</RootNamespace>
     <TargetFrameworks>net20;net30;net35;net40;net45;</TargetFrameworks>
     <Authors>Seow Phong</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <Company>Seow Phong Studio</Company>
     <Copyright>Copyright (c) 2021 Seow Phong</Copyright>
     <PackageIcon>SeowPhongLogo.png</PackageIcon>
