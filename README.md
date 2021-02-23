@@ -20,3 +20,7 @@ Source code directory
 #### Src\DotNet\ObjAdoDBLib
 
 Library Directory
+
+#### Src\DotNet\ObjAdoDBDemo
+
+Sample directory
