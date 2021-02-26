@@ -5,6 +5,7 @@
 '* Describe: Mapping VB6 ADODB.Connection
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
 '* Version: 1.0.2
+'* Create Time: 18/2/2021
 '*1.0.2  20/2/2021   Modify mExecute,Errors
 '**********************************
 Public Class Connection
