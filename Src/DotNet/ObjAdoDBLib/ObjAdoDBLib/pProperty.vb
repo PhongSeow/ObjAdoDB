@@ -1,28 +1,19 @@
 ﻿'**********************************
-'* Name: Parameter
+'* Name: Property
 '* Author: Seow Phong
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
-'* Describe: Mapping VB6 ADODB.Errors
+'* Describe: Mapping VB6 ADODB.Property
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
-'* Create Time: 18/2/2021
-'* 1.0.2	3/3/2021 Modify New
+'* Version: 1.0.1
+'* Create Time: 15/2/2021
 '**********************************
-Public Class Parameter
+Public Class pProperty
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.1"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
-		Me.Obj = CreateObject("ADODB.Parameter")
 	End Sub
-	Public Enum ParameterDirectionEnum
-		adParamInput = 1
-		adParamInputOutput = 3
-		adParamOutput = 2
-		adParamReturnValue = 4
-		adParamUnknown = 0
-	End Enum
 	Public Property Attributes() As Long
 		Get
 			Try
@@ -42,26 +33,7 @@ Public Class Parameter
 			End Try
 		End Set
 	End Property
-	Public Property Direction() As ParameterDirectionEnum
-		Get
-			Try
-				Return Me.Obj.Direction
-				Me.ClearErr()
-			Catch ex As Exception
-				Me.SetSubErrInf("Direction.Get", ex)
-				Return Nothing
-			End Try
-		End Get
-		Set(value As ParameterDirectionEnum)
-			Try
-				Me.Obj.Direction = value
-				Me.ClearErr()
-			Catch ex As Exception
-				Me.SetSubErrInf("Direction.Set", ex)
-			End Try
-		End Set
-	End Property
-	Public Property Name() As String
+	Public ReadOnly Property Name() As String
 		Get
 			Try
 				Return Me.Obj.Name
@@ -71,31 +43,34 @@ Public Class Parameter
 				Return Nothing
 			End Try
 		End Get
-		Set(value As String)
-			Try
-				Me.Obj.Name = value
-				Me.ClearErr()
-			Catch ex As Exception
-				Me.SetSubErrInf("Name.Set", ex)
-			End Try
-		End Set
 	End Property
-	Public Property NumericScale() As Byte
+	Public ReadOnly Property Type() As Field.DataTypeEnum
 		Get
 			Try
-				Return Me.Obj.NumericScale
+				Return Me.Obj.Type
 				Me.ClearErr()
 			Catch ex As Exception
-				Me.SetSubErrInf("NumericScale.Get", ex)
+				Me.SetSubErrInf("Type.Get", ex)
 				Return Nothing
 			End Try
 		End Get
-		Set(value As Byte)
+	End Property
+	Public Property Value() As Object
+		Get
 			Try
-				Me.Obj.NumericScale = value
+				Return Me.Obj.Value
 				Me.ClearErr()
 			Catch ex As Exception
-				Me.SetSubErrInf("NumericScale.Set", ex)
+				Me.SetSubErrInf("Value.Get", ex)
+				Return Nothing
+			End Try
+		End Get
+		Set(value As Object)
+			Try
+				Me.Obj.Value = value
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("Value.Set", ex)
 			End Try
 		End Set
 	End Property
