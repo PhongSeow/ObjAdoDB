@@ -18,6 +18,7 @@ Public Class ConsoleDemo
             Console.WriteLine("Press D to Create Recordset with Execute")
             Console.WriteLine("Press E to Show Recordset Information")
             Console.WriteLine("Press F to Recordset.MoveNext")
+            Console.WriteLine("Press G to Test Command")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -26,14 +27,17 @@ Public Class ConsoleDemo
                     Console.WriteLine("*******************")
                     Console.WriteLine("Set Connection String")
                     Console.WriteLine("*******************")
-                    Console.WriteLine("Input SQL Server:")
+                    Console.WriteLine("Input SQL Server:localhost")
                     Dim strDBSrv As String = Console.ReadLine()
-                    Console.WriteLine("Input DB User:")
+                    If strDBSrv = "" Then strDBSrv = "localhost"
+                    Console.WriteLine("Input DB User:sa")
                     Dim strDBUser As String = Console.ReadLine()
+                    If strDBUser = "" Then strDBUser = "sa"
                     Console.WriteLine("Input DB Password:")
                     Dim strDBPwd As String = Console.ReadLine()
-                    Console.WriteLine("Input Default DB:")
+                    Console.WriteLine("Input Default DB:master")
                     Dim strDefaDB As String = Console.ReadLine()
+                    If strDefaDB = "" Then strDefaDB = "master"
                     Me.ConnStr = "Provider=Sqloledb;Data Source=" & strDBSrv & ";Database=" & strDefaDB & ";User ID=" & strDBUser & ";Password=" & strDBPwd
                     'Me.ConnStr = "Provider=SQLNCLI10;Data Source=" & strDBSrv & ";Database=" & strDefaDB & ";User ID=" & strDBUser & ";Password=" & strDBPwd
                     With Me.Conn
@@ -98,6 +102,43 @@ Public Class ConsoleDemo
                         Else
                             Console.WriteLine("MoveNext OK")
                         End If
+                    End With
+                Case ConsoleKey.G
+                    Console.WriteLine("#################")
+                    Console.WriteLine("Test Command")
+                    Console.WriteLine("#################")
+                    Dim oCommand As New Command
+                    With oCommand
+                        Console.WriteLine("Set ActiveConnection")
+                        .ActiveConnection = Me.Conn
+                        Console.WriteLine("CommandText=""sp_helpdb""")
+                        .CommandText = "sp_helpdb"
+                        Console.WriteLine("CreateParameter @dbname=""master""")
+                        .Parameters.Append(.CreateParameter("@dbname", Field.DataTypeEnum.adVarChar, Parameter.ParameterDirectionEnum.adParamInput, 128, "master"))
+                        If .LastErr <> "" Then
+                            Console.WriteLine(.LastErr)
+                        Else
+                            Console.WriteLine("OK")
+                        End If
+                        Console.WriteLine("Execute")
+                        Dim rsAny = .Execute()
+                        If .LastErr <> "" Then
+                            Console.WriteLine(.LastErr)
+                        Else
+                            Console.WriteLine("OK")
+                            With rsAny
+                                Console.WriteLine("Fields.Count=" & .Fields.Count)
+                                If .Fields.Count > 0 Then
+                                    Dim i As Integer
+                                    For i = 0 To .Fields.Count - 1
+                                        Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                    Next
+                                End If
+                                Console.WriteLine("PageCount=" & .PageCount)
+                                Console.WriteLine("EOF=" & .EOF)
+                            End With
+                        End If
+                        .Parameters.Delete("@dbname")
                     End With
             End Select
         Loop
