@@ -3,6 +3,7 @@
 这是一个将 Microsoft ActiveX Data Objects Library 映射到 .net 平台的类库和 NuGet 包，可以在不同的 .net 框架下使用。
 类库需要 %ProgramFiles(x86)%\Common Files\System\ado\msado15.dll 支持，Windows 通常默认已安装好了。
 使用这个类库，可以方便将 VB6 和 ASP 的代码升级到 .net 平台。
+如果程序运行在 IIS，需要将应用程序池高级设置中的应用32位应用程序设置为 True 。
 
 ## ***目录和文件描述***
 
