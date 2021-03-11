@@ -4,13 +4,14 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Recordset
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 18/2/2021
 '*1.0.2  20/2/2021   Modify Fields
+'*1.0.3  11/3/2021   Modify NextRecordset
 '**********************************
 Public Class Recordset
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
@@ -562,7 +563,9 @@ Public Class Recordset
 	End Sub
 	Public Function NextRecordset(Optional RecordsAffected = "") As Recordset
 		Try
-			NextRecordset = Me.Obj.NextRecordset(RecordsAffected)
+			Dim oRecordset As New Recordset
+			oRecordset.Obj = Me.Obj.NextRecordset(RecordsAffected)
+			NextRecordset = oRecordset
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("NextRecordset", ex)

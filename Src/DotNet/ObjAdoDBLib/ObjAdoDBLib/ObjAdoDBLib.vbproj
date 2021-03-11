@@ -13,12 +13,12 @@
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.5.5</Version>
+    <Version>1.0.6.1</Version>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed it in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.
 </Description>
-    <PackageReleaseNotes>Add Class Command and Parameters, fix some bugs.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix Recordset bugs</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
