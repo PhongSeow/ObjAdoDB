@@ -5,8 +5,20 @@ Public Class ConsoleDemo
     Public ConnStr As String
     Public SQL As String
     Public RS As Recordset
+    Public DBSrv As String = "localhost"
+    Public DBUser As String = "sa"
+    Public DBPwd As String = ""
+    Public CurrDB As String = "master"
+    Public Provider As Connection.ProviderEnum
+    Public CurrConsoleKey As ConsoleKey
+    Public InpStr As String
+    Public AccessFilePath As String
 
     Public Sub Main()
+        With Me.Conn
+            .ConnectionTimeout = 5
+            .ConnectionString = Me.ConnStr
+        End With
         Do While True
             Console.WriteLine("*******************")
             Console.WriteLine("Main menu")
@@ -18,7 +30,8 @@ Public Class ConsoleDemo
             Console.WriteLine("Press D to Create Recordset with Execute")
             Console.WriteLine("Press E to Show Recordset Information")
             Console.WriteLine("Press F to Recordset.MoveNext")
-            Console.WriteLine("Press G to Test Command")
+            Console.WriteLine("Press G to Recordset.NextRecordset")
+            Console.WriteLine("Press H to Test Command")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -27,23 +40,59 @@ Public Class ConsoleDemo
                     Console.WriteLine("*******************")
                     Console.WriteLine("Set Connection String")
                     Console.WriteLine("*******************")
-                    Console.WriteLine("Input SQL Server:localhost")
-                    Dim strDBSrv As String = Console.ReadLine()
-                    If strDBSrv = "" Then strDBSrv = "localhost"
-                    Console.WriteLine("Input DB User:sa")
-                    Dim strDBUser As String = Console.ReadLine()
-                    If strDBUser = "" Then strDBUser = "sa"
-                    Console.WriteLine("Input DB Password:")
-                    Dim strDBPwd As String = Console.ReadLine()
-                    Console.WriteLine("Input Default DB:master")
-                    Dim strDefaDB As String = Console.ReadLine()
-                    If strDefaDB = "" Then strDefaDB = "master"
-                    Me.ConnStr = "Provider=Sqloledb;Data Source=" & strDBSrv & ";Database=" & strDefaDB & ";User ID=" & strDBUser & ";Password=" & strDBPwd
-                    'Me.ConnStr = "Provider=SQLNCLI10;Data Source=" & strDBSrv & ";Database=" & strDefaDB & ";User ID=" & strDBUser & ";Password=" & strDBPwd
-                    With Me.Conn
-                        .ConnectionTimeout = 5
-                        .ConnectionString = Me.ConnStr
-                    End With
+                    Console.WriteLine("Press Q to Up")
+                    Console.WriteLine("Press A to SQL Server")
+                    Console.WriteLine("Press B to Access")
+                    Do While True
+                        Me.CurrConsoleKey = Console.ReadKey().Key
+                        Select Case Me.CurrConsoleKey
+                            Case ConsoleKey.Q
+                                Exit Do
+                            Case ConsoleKey.A
+                                Console.WriteLine("Is Use Microsoft SQL Server OLEDB ? (Y/n)")
+                                Me.InpStr = Console.ReadLine()
+                                Select Case Me.InpStr
+                                    Case "Y", "y", ""
+                                        Me.Provider = Connection.ProviderEnum.MicrosoftSQLServer
+                                        Console.WriteLine("Provider=MicrosoftSQLServer")
+                                    Case Else
+                                        Me.Provider = Connection.ProviderEnum.MicrosoftSQLServer2012NativeClient
+                                        Console.WriteLine("Provider=MicrosoftSQLServer2012NativeClient")
+                                End Select
+                                Console.WriteLine("Input SQL Server:" & Me.DBSrv)
+                                Me.DBSrv = Console.ReadLine()
+                                If Me.DBSrv = "" Then Me.DBSrv = "localhost"
+                                Console.WriteLine("SQL Server=" & Me.DBSrv)
+                                Console.WriteLine("Input Default DB:" & Me.CurrDB)
+                                Me.CurrDB = Console.ReadLine()
+                                If Me.CurrDB = "" Then Me.CurrDB = "master"
+                                Console.WriteLine("Default DB=" & Me.CurrDB)
+                                Console.WriteLine("Is Trusted Connection ? (Y/n)")
+                                Me.InpStr = Console.ReadLine()
+                                Select Case Me.InpStr
+                                    Case "Y", "y", ""
+                                        Me.Conn.SetConnSQLServer(Me.DBSrv, Me.CurrDB, Me.Provider)
+                                    Case Else
+                                        Console.WriteLine("Input DB User:" & Me.CurrDB)
+                                        Me.DBUser = Console.ReadLine()
+                                        If Me.DBUser = "" Then Me.DBUser = "sa"
+                                        Console.WriteLine("DB User=" & Me.DBUser)
+                                        Console.WriteLine("Input DB Password:")
+                                        Me.DBPwd = Console.ReadLine()
+                                        Console.WriteLine("DB Password=" & Me.DBPwd)
+                                        Me.Conn.SetConnSQLServer(Me.DBSrv, Me.DBUser, Me.DBPwd, Me.CurrDB, Me.Provider)
+                                End Select
+                                Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
+                                Exit Do
+                            Case ConsoleKey.B
+                                Console.WriteLine("Input Access File Path:" & Me.AccessFilePath)
+                                Me.AccessFilePath = Console.ReadLine()
+                                Console.WriteLine("Access File Path=" & Me.AccessFilePath)
+                                Me.Conn.SetConnAccess(Me.AccessFilePath)
+                                Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
+                                Exit Do
+                        End Select
+                    Loop
                 Case ConsoleKey.B
                     Console.WriteLine("#################")
                     Console.WriteLine("Open Connection")
@@ -104,6 +153,29 @@ Public Class ConsoleDemo
                         End If
                     End With
                 Case ConsoleKey.G
+                    Console.WriteLine("#################")
+                    Console.WriteLine("Recordset.NextRecordset")
+                    Console.WriteLine("#################")
+                    With Me.RS
+                        Dim oRs As Recordset = .NextRecordset
+                        If .LastErr <> "" Then
+                            Console.WriteLine("Error:" & .LastErr)
+                        Else
+                            Console.WriteLine("OK")
+                            With oRs
+                                Console.WriteLine("Fields.Count=" & .Fields.Count)
+                                If .Fields.Count > 0 Then
+                                    Dim i As Integer
+                                    For i = 0 To .Fields.Count - 1
+                                        Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                    Next
+                                End If
+                                Console.WriteLine("PageCount=" & .PageCount)
+                                Console.WriteLine("EOF=" & .EOF)
+                            End With
+                        End If
+                    End With
+                Case ConsoleKey.H
                     Console.WriteLine("#################")
                     Console.WriteLine("Test Command")
                     Console.WriteLine("#################")
