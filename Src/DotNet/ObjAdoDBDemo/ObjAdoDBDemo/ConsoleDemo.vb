@@ -32,6 +32,7 @@ Public Class ConsoleDemo
             Console.WriteLine("Press F to Recordset.MoveNext")
             Console.WriteLine("Press G to Recordset.NextRecordset")
             Console.WriteLine("Press H to Test Command")
+            Console.WriteLine("Press I to Test JSon")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -212,6 +213,23 @@ Public Class ConsoleDemo
                         End If
                         .Parameters.Delete("@dbname")
                     End With
+                Case ConsoleKey.I
+                    Console.WriteLine("*******************")
+                    Console.WriteLine("Test JSon")
+                    Console.WriteLine("*******************")
+                    Console.WriteLine("Press Q to Up")
+                    Console.WriteLine("Press A to Convert current row to JSON")
+                    Do While True
+                        Me.CurrConsoleKey = Console.ReadKey().Key
+                        Select Case Me.CurrConsoleKey
+                            Case ConsoleKey.Q
+                                Exit Do
+                            Case ConsoleKey.A
+                                Console.WriteLine(Me.RS.Row2JSon)
+                                Exit Do
+                        End Select
+                    Loop
+
             End Select
         Loop
     End Sub

@@ -12,9 +12,9 @@
 	  <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
 	  <RepositoryType>GIT</RepositoryType>
 	  <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBDemo</RepositoryUrl>
-	  <Version>1.0.5.2</Version>
+	  <Version>1.0.6.1</Version>
 	  <PackageTags>ObjAdoDBLib Ado AdoDB VB6 ASP</PackageTags>
-	  <PackageReleaseNotes>Add demo code for SQL Server and Access.</PackageReleaseNotes>
+	  <PackageReleaseNotes>Add demo code for Convert current row to JSON.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ObjAdoDBLib" Version="1.0.6.6" />
+    <PackageReference Include="ObjAdoDBLib" Version="1.0.7.8" />
   </ItemGroup>
 
 </Project>
