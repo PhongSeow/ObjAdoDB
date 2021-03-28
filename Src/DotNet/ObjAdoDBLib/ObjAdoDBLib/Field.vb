@@ -4,13 +4,26 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Fields
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.1
+'* Version: 1.0.4
 '* Create Time: 21/2/2021
+'*1.0.2  19/3/2021   Add BooleanValue,DateValue,DecValue,IntValue,LngValue,StrValue,DataCategory
+'*1.0.3  20/3/2021   Modify DecValue, add ValueForJSon
+'*1.0.4  27/3/2021   Modify StrValue,LngValue
 '**********************************
 Public Class Field
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.1"
+	Private Const CLS_VERSION As String = "1.0.4"
 	Public Obj As Object
+
+	Public Enum DataCategoryEnum
+		OtherValue = 0
+		StrValue = 10
+		IntValue = 20
+		DecValue = 30
+		BooleanValue = 40
+		DateValue = 50
+	End Enum
+
 	Public Enum DataTypeEnum
 		adArray = 8192
 		adBigInt = 20
@@ -142,6 +155,27 @@ Public Class Field
 		End Get
 	End Property
 
+	Public ReadOnly Property DataCategory() As DataCategoryEnum
+		Get
+			Try
+				Select Case Me.Type
+					Case DataTypeEnum.adChar, DataTypeEnum.adVarChar, DataTypeEnum.adWChar, DataTypeEnum.adVarWChar, DataTypeEnum.adLongVarChar, DataTypeEnum.adLongVarWChar, DataTypeEnum.adGUID
+						DataCategory = DataCategoryEnum.StrValue
+					Case DataTypeEnum.adBigInt, DataTypeEnum.adTinyInt, DataTypeEnum.adSmallInt, DataTypeEnum.adUnsignedBigInt, DataTypeEnum.adUnsignedInt, DataTypeEnum.adUnsignedSmallInt, DataTypeEnum.adUnsignedTinyInt, DataTypeEnum.adInteger
+						DataCategory = DataCategoryEnum.IntValue
+					Case DataTypeEnum.adChar, DataTypeEnum.adVarChar, DataTypeEnum.adWChar, DataTypeEnum.adVarWChar, DataTypeEnum.adLongVarChar, DataTypeEnum.adLongVarWChar, DataTypeEnum.adGUID
+						DataCategory = DataCategoryEnum.DecValue
+					Case Else
+						DataCategory = DataCategoryEnum.OtherValue
+				End Select
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("DataCategory.Get", ex)
+				Return DataCategoryEnum.OtherValue
+			End Try
+		End Get
+	End Property
+
 	Public ReadOnly Property Type() As DataTypeEnum
 		Get
 			Try
@@ -149,6 +183,105 @@ Public Class Field
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Type.Get", ex)
+				Return Nothing
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property DecValue() As Decimal
+		Get
+			Try
+				Return CDec(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("DecValue.Get", ex)
+				Return Nothing
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property DateValue() As DateTime
+		Get
+			Try
+				Return CDate(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("DateValue.Get", ex)
+				Return DateTime.MinValue
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property StrValue() As String
+		Get
+			Try
+				Return CStr(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("StrValue.Get", ex)
+				Return ""
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property LngValue() As Long
+		Get
+			Try
+				Return CLng(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("LngValue.Get", ex)
+				Return 0
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property IntValue() As Integer
+		Get
+			Try
+				Return CBool(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("IntValue.Get", ex)
+				Return 0
+			End Try
+		End Get
+	End Property
+
+	Public ReadOnly Property BooleanValue() As Boolean
+		Get
+			Try
+				Return CBool(Me.Obj.Value)
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("BooleanValue.Get", ex)
+				Return False
+			End Try
+		End Get
+	End Property
+
+	Friend ReadOnly Property ValueForJSon() As Object
+		Get
+			Try
+				Select Case Me.DataCategory
+					Case DataCategoryEnum.BooleanValue
+						ValueForJSon = Me.BooleanValue
+					Case DataCategoryEnum.DateValue
+						ValueForJSon = Me.DateValue
+					Case DataCategoryEnum.DecValue
+						ValueForJSon = Me.DecValue
+					Case DataCategoryEnum.IntValue
+						ValueForJSon = Me.IntValue
+					Case DataCategoryEnum.OtherValue
+						ValueForJSon = Me.StrValue
+					Case DataCategoryEnum.StrValue
+						ValueForJSon = Me.StrValue
+					Case Else
+						ValueForJSon = Me.StrValue
+				End Select
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("ValueForJSon.Get", ex)
 				Return Nothing
 			End Try
 		End Get

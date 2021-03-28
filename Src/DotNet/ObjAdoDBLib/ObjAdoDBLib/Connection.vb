@@ -4,15 +4,25 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Connection
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.3
+'* Version: 1.0.5
 '* Create Time: 18/2/2021
 '*1.0.2  20/2/2021   Modify mExecute,Errors
 '*1.0.3  13/3/2021   Add ProviderEnum,SetConnSQLServer,SetConnAccess
+'*1.0.4  19/3/2021   Add DBTypeEnum,DBType
 '**********************************
 Public Class Connection
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.3"
+	Private Const CLS_VERSION As String = "1.0.5"
 	Public Obj As Object
+
+	Public Enum DBTypeEnum
+		Unknow = 0
+		SQLServer = 10
+		Oracle = 20
+		MySQL = 30
+		Access = 40
+	End Enum
+
 	Public Enum ProviderEnum
 		ActiveDirectoryServices = 10
 		MicrosoftJetDatabases = 20
@@ -471,6 +481,7 @@ Public Class Connection
 			DBUserPwd = Replace(DBUserPwd, "'", "''")
 			strConn &= "Data Source=" & SQLServer & ";Database=" & CurrDatabase & ";User ID='" & DBUser & "';Password='" & DBUserPwd & "';"
 			Me.ConnectionString = strConn
+			Me.DBType = DBTypeEnum.SQLServer
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("SetConnSQLServer", ex)
@@ -483,6 +494,7 @@ Public Class Connection
 			strConn = Me.mGetProviderStr(ProviderEnum.MicrosoftJetDatabases)
 			strConn &= "Data Source=" & AccessFilePath
 			Me.ConnectionString = strConn
+			Me.DBType = DBTypeEnum.Access
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("SetConnAccess", ex)
@@ -500,6 +512,7 @@ Public Class Connection
 			End Select
 			strConn &= "Data Source=" & SQLServer & ";Database=" & CurrDatabase & ";Integrated Security=SSPI;"
 			Me.ConnectionString = strConn
+			Me.DBType = DBTypeEnum.SQLServer
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("SetConnSQLServer", ex)
@@ -540,5 +553,18 @@ Public Class Connection
 			Return ""
 		End Try
 	End Function
+
+	''' <summary>
+	''' 数据库类型
+	''' </summary>
+	Private mlngDBType As DBTypeEnum = DBTypeEnum.Unknow
+	Public Property DBType() As DBTypeEnum
+		Get
+			Return mlngDBType
+		End Get
+		Set(ByVal value As DBTypeEnum)
+			mlngDBType = value
+		End Set
+	End Property
 
 End Class

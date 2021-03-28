@@ -4,18 +4,29 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Recordset
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.3
+'* Version: 1.0.7
 '* Create Time: 18/2/2021
 '*1.0.2  20/2/2021   Modify Fields
 '*1.0.3  11/3/2021   Modify NextRecordset
+'*1.0.4  18/3/2021   Add Recordset2JSon,MaxToJSonRows
+'*1.0.5  20/3/2021   Add Recordset2JSonToEnd, Modify mRecordset2JSon
+'*1.0.6  27/3/2021   Modify mRs2JSonTypeEnum,mRecordset2JSon, add Rows2JSon,IsTrimJSonValue
+'*1.0.7  27/3/2021   Modify mRs2JSonTypeEnum,Row2JSon
 '**********************************
 Public Class Recordset
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.3"
+	Private Const CLS_VERSION As String = "1.0.7"
 	Public Obj As Object
+	Private moPigJSon As PigJSon
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
 	End Sub
+	Private Enum mRs2JSonTypeEnum
+		CurrRecordsetTopRows = 10
+		CurrRecordsetTopEnd = 20
+		AllRecordset = 30
+	End Enum
+
 	Public Enum EditModeEnum
 		adEditAdd = 2
 		adEditDelete = 4
@@ -90,6 +101,32 @@ Public Class Recordset
 		adPosEOF = -3
 		adPosUnknown = -1
 	End Enum
+
+	''' <summary>
+	''' Whether to remove the space before and after the value is converted to JSON
+	''' </summary>
+	Private mbolIsTrimJSonValue As Boolean = True
+	Public Property IsTrimJSonValue() As Boolean
+		Get
+			Return mbolIsTrimJSonValue
+		End Get
+		Set(ByVal value As Boolean)
+			mbolIsTrimJSonValue = value
+		End Set
+	End Property
+
+	''' <summary>
+	''' The maximum number of rows to convert the Recordset to JSON
+	''' </summary>
+	Private mlngMaxToJSonRows As Long = 1024
+	Public Property MaxToJSonRows() As Long
+		Get
+			Return mlngMaxToJSonRows
+		End Get
+		Set(ByVal value As Long)
+			mlngMaxToJSonRows = value
+		End Set
+	End Property
 
 	Public Property AbsolutePage() As PositionEnum
 		Get
@@ -763,6 +800,105 @@ Public Class Recordset
 			Me.SetSubErrInf("UpdateBatch", ex)
 		End Try
 	End Sub
+
+	''' <summary>
+	''' Convert current row to JSON
+	''' </summary>
+	Public Function Row2JSon() As String
+		Try
+			Dim pjMain As New PigJSon
+			With pjMain
+				If Me.EOF = False Then
+					For i = 0 To Me.Fields.Count - 1
+						Dim oField As Field = Me.Fields.Item(i)
+						Dim strName As String = oField.Name
+						Dim strValue As String = oField.ValueForJSon
+						If strName = "" Then strName = "Col" & (i + 1).ToString
+						If Me.IsTrimJSonValue = True Then strValue = Trim(strValue)
+						If i = 0 Then
+							.AddEle(strName, strValue, True)
+						Else
+							.AddEle(strName, strValue)
+						End If
+					Next
+					.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+				End If
+			End With
+			Row2JSon = pjMain.MainJSonStr
+			pjMain = Nothing
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("Row2JSon", ex)
+			Return ""
+		End Try
+	End Function
+
+	'Public Function Recordset2JSon(TopRows As Long) As String
+	'	Try
+	'		Recordset2JSon = Me.mRecordset2JSon(mRs2JSonTypeEnum.CurrRecordsetTopRows, TopRows).MainJSonStr
+	'		Me.ClearErr()
+	'	Catch ex As Exception
+	'		Me.SetSubErrInf("Recordset2JSon", ex)
+	'		Return ""
+	'	End Try
+	'End Function
+
+	'Public Function Recordset2JSonToEnd() As String
+	'	Try
+	'		Recordset2JSonToEnd = Me.mRecordset2JSon(mRs2JSonTypeEnum.CurrRecordsetTopEnd).MainJSonStr
+	'		Me.ClearErr()
+	'	Catch ex As Exception
+	'		Me.SetSubErrInf("Recordset2JSonToEnd", ex)
+	'		Return ""
+	'	End Try
+	'End Function
+
+
+	Private Function mRecordset2JSon(Rs2JSonType As mRs2JSonTypeEnum, Optional TopRows As Long = 1) As PigJSon
+		Dim strStepName As String = ""
+		Try
+			Dim pjMain As New PigJSon, intRows As Integer = 0
+			Select Case Rs2JSonType
+				Case mRs2JSonTypeEnum.CurrRecordsetTopEnd, mRs2JSonTypeEnum.CurrRecordsetTopRows
+					Dim pjRow As New PigJSon
+					With pjMain
+						.Reset()
+						.AddArrayEleBegin("RowsValueList", True)
+						Do While True
+							If intRows > Me.MaxToJSonRows Then Exit Do
+							If Me.EOF = True Then Exit Do
+							intRows += 1
+							With pjRow
+								.Reset()
+								For i = 0 To Me.Fields.Count - 1
+									Dim oField As Field = Me.Fields.Item(i)
+									If i = 0 Then
+										.AddEle(oField.Name, oField.ValueForJSon, True)
+									Else
+										.AddEle(oField.Name, oField.ValueForJSon)
+									End If
+								Next
+								.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+							End With
+							.AddArrayEleValue(pjRow.MainJSonStr)
+						Loop
+						.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+						.AddEle("Rows", intRows)
+						.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+					End With
+					mRecordset2JSon = pjMain
+				Case mRs2JSonTypeEnum.AllRecordset
+					Throw New Exception("Coming soon")
+				Case Else
+					Throw New Exception("Invalid Rs2JSonType")
+			End Select
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("mRecordset2JSon", ex)
+			Return Nothing
+		End Try
+	End Function
+
 End Class
 
 
