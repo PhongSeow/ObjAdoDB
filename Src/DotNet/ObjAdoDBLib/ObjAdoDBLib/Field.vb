@@ -4,15 +4,16 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Fields
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.4
+'* Version: 1.0.5
 '* Create Time: 21/2/2021
 '*1.0.2  19/3/2021   Add BooleanValue,DateValue,DecValue,IntValue,LngValue,StrValue,DataCategory
 '*1.0.3  20/3/2021   Modify DecValue, add ValueForJSon
 '*1.0.4  27/3/2021   Modify StrValue,LngValue
+'*1.0.5  4/4/2021   Modify IntValue, add mSrc2JSonStr,mLng2Date,IsGetValueErrRetNothing,DateValue
 '**********************************
 Public Class Field
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.4"
+	Private Const CLS_VERSION As String = "1.0.5"
 	Public Obj As Object
 
 	Public Enum DataCategoryEnum
@@ -75,7 +76,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.ActualSize
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActualSize.Get", ex)
 				Return Nothing
@@ -87,7 +87,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Attributes
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Attributes.Get", ex)
 				Return Nothing
@@ -99,7 +98,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.DefinedSize
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DefinedSize.Get", ex)
 				Return Nothing
@@ -111,7 +109,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Name
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Name.Get", ex)
 				Return Nothing
@@ -123,7 +120,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.NumericScale
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("NumericScale.Get", ex)
 				Return Nothing
@@ -135,7 +131,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Precision
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Precision.Get", ex)
 				Return Nothing
@@ -147,7 +142,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Status
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Status.Get", ex)
 				Return Nothing
@@ -168,7 +162,6 @@ Public Class Field
 					Case Else
 						DataCategory = DataCategoryEnum.OtherValue
 				End Select
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DataCategory.Get", ex)
 				Return DataCategoryEnum.OtherValue
@@ -180,7 +173,6 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Type
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Type.Get", ex)
 				Return Nothing
@@ -192,7 +184,6 @@ Public Class Field
 		Get
 			Try
 				Return CDec(Me.Obj.Value)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DecValue.Get", ex)
 				Return Nothing
@@ -204,7 +195,6 @@ Public Class Field
 		Get
 			Try
 				Return CDate(Me.Obj.Value)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DateValue.Get", ex)
 				Return DateTime.MinValue
@@ -216,7 +206,6 @@ Public Class Field
 		Get
 			Try
 				Return CStr(Me.Obj.Value)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("StrValue.Get", ex)
 				Return ""
@@ -228,7 +217,6 @@ Public Class Field
 		Get
 			Try
 				Return CLng(Me.Obj.Value)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("LngValue.Get", ex)
 				Return 0
@@ -239,8 +227,7 @@ Public Class Field
 	Public ReadOnly Property IntValue() As Integer
 		Get
 			Try
-				Return CBool(Me.Obj.Value)
-				Me.ClearErr()
+				Return CInt(Me.Obj.Value)
 			Catch ex As Exception
 				Me.SetSubErrInf("IntValue.Get", ex)
 				Return 0
@@ -252,7 +239,6 @@ Public Class Field
 		Get
 			Try
 				Return CBool(Me.Obj.Value)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("BooleanValue.Get", ex)
 				Return False
@@ -279,7 +265,6 @@ Public Class Field
 					Case Else
 						ValueForJSon = Me.StrValue
 				End Select
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ValueForJSon.Get", ex)
 				Return Nothing
@@ -291,12 +276,14 @@ Public Class Field
 		Get
 			Try
 				Return Me.Obj.Value
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Value.Get", ex)
 				Return Nothing
 			End Try
 		End Get
 	End Property
+
+
+
 
 End Class

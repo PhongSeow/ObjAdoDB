@@ -3,7 +3,7 @@
 '* Author: Seow Phong
 '* Describe: Simple JSON class, which can assemble and parse JSON definitions without components.
 '* Home Url: http://www.seowphong.com
-'* Version: 1.0.9
+'* Version: 1.0.11
 '* Create Time: 8/8/2019
 '* 1.0.2    10/8/2020   Code changed from VB6 to VB.NET
 '* 1.0.3    12/8/2020   Some Function debugging 
@@ -14,11 +14,12 @@
 '* 1.0.8    19/9/2020   Fix AddArrayEle,mAddEle bug and add AddOneArrayEle
 '* 1.0.9    1/10/2020   Fix AddArrayEleValue,add AddArrayEleBegin
 '* 1.0.10   10/3/2020   Use PigBaseMini，and add IsGetValueErrRetNothing
+'* 1.0.11   4/4/2021   Modify AddArrayEleBegin,mSrc2JSonStr,mJSonStr2Src,mLng2Date
 '*******************************************************
 Imports System.Text
 Public Class PigJSon
     Inherits PigBaseMini
-    Private Const CLS_VERSION As String = "1.0.10"
+    Private Const CLS_VERSION As String = "1.0.11"
 
     ''' <summary>The type of the JSON element</summary>
     Public Enum xpJSonEleType
@@ -360,7 +361,7 @@ Public Class PigJSon
             End If
             Me.ClearErr()
         Catch ex As Exception
-            Me.SetSubErrInf("GetDateValue", ex)
+            Me.SetSubErrInf("mLng2Date", ex)
             If Me.IsGetValueErrRetNothing = True Then
                 Return Nothing
             Else
@@ -472,7 +473,11 @@ Public Class PigJSon
         Try
             mSrc2JSonStr(EleKey)
             With msbMain
-                If IsFirstEle = False Then .Append(",")
+                If IsFirstEle = False Then
+                    .Append(",")
+                Else
+                    .Append("{")
+                End If
                 .Append("""")
                 .Append(EleKey)
                 .Append(""":[")
@@ -636,20 +641,28 @@ Public Class PigJSon
         End Try
     End Sub
 
-    Private Sub mSrc2JSonStr(SrcStr As String)
+    Private Sub mSrc2JSonStr(ByRef SrcStr As String)
         Try
-            If InStr(SrcStr, "\") <> 0 Then SrcStr = Replace(SrcStr, "\", "\\")
-            If InStr(SrcStr, """") <> 0 Then SrcStr = Replace(SrcStr, """", "\""")
+            If InStr(SrcStr, "\") <> 0 Then
+                SrcStr = Replace(SrcStr, "\", "\\")
+            End If
+            If InStr(SrcStr, """") <> 0 Then
+                SrcStr = Replace(SrcStr, """", "\""")
+            End If
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("mSrc2JSonStr", ex)
         End Try
     End Sub
 
-    Private Sub mJSonStr2Src(JSonStr As String)
+    Private Sub mJSonStr2Src(ByRef JSonStr As String)
         Try
-            If InStr(JSonStr, "\""") <> 0 Then JSonStr = Replace(JSonStr, "\""", """")
-            If InStr(JSonStr, "\\") <> 0 Then JSonStr = Replace(JSonStr, "\\", "\")
+            If InStr(JSonStr, "\""") <> 0 Then
+                JSonStr = Replace(JSonStr, "\""", """")
+            End If
+            If InStr(JSonStr, "\\") <> 0 Then
+                JSonStr = Replace(JSonStr, "\\", "\")
+            End If
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("mJSonStr2Src", ex)
