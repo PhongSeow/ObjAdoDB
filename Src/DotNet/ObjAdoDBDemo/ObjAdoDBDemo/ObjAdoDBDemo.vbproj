@@ -12,9 +12,9 @@
 	  <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
 	  <RepositoryType>GIT</RepositoryType>
 	  <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBDemo</RepositoryUrl>
-	  <Version>1.0.7.1</Version>
+	  <Version>1.0.8.2</Version>
 	  <PackageTags>ObjAdoDBLib Ado AdoDB VB6 ASP</PackageTags>
-	  <PackageReleaseNotes>Add demo code for Convert current recordset to JSON.</PackageReleaseNotes>
+	  <PackageReleaseNotes>Modify demo for NextRecordset.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

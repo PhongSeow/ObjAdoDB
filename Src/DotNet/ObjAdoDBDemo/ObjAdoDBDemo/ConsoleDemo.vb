@@ -157,23 +157,22 @@ Public Class ConsoleDemo
                     Console.WriteLine("#################")
                     Console.WriteLine("Recordset.NextRecordset")
                     Console.WriteLine("#################")
+                    Me.RS = Me.RS.NextRecordset
                     With Me.RS
-                        Dim oRs As Recordset = .NextRecordset
+                        'Dim oRs As Recordset = .NextRecordset
                         If .LastErr <> "" Then
                             Console.WriteLine("Error:" & .LastErr)
                         Else
                             Console.WriteLine("OK")
-                            With oRs
-                                Console.WriteLine("Fields.Count=" & .Fields.Count)
-                                If .Fields.Count > 0 Then
-                                    Dim i As Integer
-                                    For i = 0 To .Fields.Count - 1
-                                        Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
-                                    Next
-                                End If
-                                Console.WriteLine("PageCount=" & .PageCount)
-                                Console.WriteLine("EOF=" & .EOF)
-                            End With
+                            Console.WriteLine("Fields.Count=" & .Fields.Count)
+                            If .Fields.Count > 0 Then
+                                Dim i As Integer
+                                For i = 0 To .Fields.Count - 1
+                                    Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                Next
+                            End If
+                            Console.WriteLine("PageCount=" & .PageCount)
+                            Console.WriteLine("EOF=" & .EOF)
                         End If
                     End With
                 Case ConsoleKey.H
