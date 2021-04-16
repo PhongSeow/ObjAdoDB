@@ -6,9 +6,10 @@
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
 '* Version: 1.0.5
 '* Create Time: 18/2/2021
-'*1.0.2  20/2/2021   Modify mExecute,Errors
-'*1.0.3  13/3/2021   Add ProviderEnum,SetConnSQLServer,SetConnAccess
-'*1.0.4  19/3/2021   Add DBTypeEnum,DBType
+'* 1.0.2  20/2/2021   Modify mExecute,Errors
+'* 1.0.3  13/3/2021   Add ProviderEnum,SetConnSQLServer,SetConnAccess
+'* 1.0.4  19/3/2021   Add DBTypeEnum,DBType
+'* 1.0.5  16/4/2021	Remove excess Me.ClearErr(), Modify BeginTrans
 '**********************************
 Public Class Connection
 	Inherits PigBaseMini
@@ -112,13 +113,17 @@ Public Class Connection
 
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
-		Me.Obj = CreateObject("ADODB.Connection")
+		Try
+			Me.Obj = CreateObject("ADODB.Connection")
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("New", ex)
+		End Try
 	End Sub
 	Public Property Attributes() As Long
 		Get
 			Try
 				Return Me.Obj.Attributes
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Attributes.Get", ex)
 				Return Nothing
@@ -133,7 +138,7 @@ Public Class Connection
 			End Try
 		End Set
 	End Property
-	Public Function BeginTrans() As Long
+	Public Function BeginTrans() As Object
 		Try
 			BeginTrans = Me.Obj.BeginTrans()
 			Me.ClearErr()
@@ -162,7 +167,6 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.CommandTimeout
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CommandTimeout.Get", ex)
 				Return Nothing
@@ -189,10 +193,9 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.ConnectionString
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ConnectionString.Get", ex)
-				Return Nothing
+				Return ""
 			End Try
 		End Get
 		Set(value As String)
@@ -208,10 +211,9 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.ConnectionTimeout
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ConnectionTimeout.Get", ex)
-				Return Nothing
+				Return 0
 			End Try
 		End Get
 		Set(value As Long)
@@ -227,7 +229,6 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.CursorLocation
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CursorLocation.Get", ex)
 				Return Nothing
@@ -246,10 +247,9 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.DefaultDatabase
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DefaultDatabase.Get", ex)
-				Return Nothing
+				Return ""
 			End Try
 		End Get
 		Set(value As String)
@@ -267,7 +267,6 @@ Public Class Connection
 				Dim oErrors As New Errors
 				oErrors.Obj = Me.Obj.Errors
 				Return oErrors.Obj
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Errors.Get", ex)
 				Return Nothing
@@ -320,7 +319,6 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.IsolationLevel
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("IsolationLevel.Get", ex)
 				Return Nothing
@@ -339,7 +337,6 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.Mode
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Mode.Get", ex)
 				Return Nothing
@@ -407,7 +404,6 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.Properties
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Properties.Get", ex)
 				Return Nothing
@@ -426,10 +422,9 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.Provider
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Provider.Get", ex)
-				Return Nothing
+				Return ""
 			End Try
 		End Get
 		Set(value As String)
@@ -453,10 +448,9 @@ Public Class Connection
 		Get
 			Try
 				Return Me.Obj.State
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("State.Get", ex)
-				Return Nothing
+				Return Long.MinValue
 			End Try
 		End Get
 		Set(value As Long)

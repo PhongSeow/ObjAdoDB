@@ -4,19 +4,20 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Recordset
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.8
+'* Version: 1.0.9
 '* Create Time: 18/2/2021
-'*1.0.2  20/2/2021   Modify Fields
-'*1.0.3  11/3/2021   Modify NextRecordset
-'*1.0.4  18/3/2021   Add Recordset2JSon,MaxToJSonRows
-'*1.0.5  20/3/2021   Add Recordset2JSonToEnd, Modify mRecordset2JSon
-'*1.0.6  27/3/2021   Modify mRs2JSonTypeEnum,mRecordset2JSon, add Rows2JSon,IsTrimJSonValue
-'*1.0.7  27/3/2021   Modify mRs2JSonTypeEnum,Row2JSon
-'*1.0.8  4/4/2021   Remove mRecordset2JSon, Add Recordset2JSon
+'* 1.0.2  20/2/2021   Modify Fields
+'* 1.0.3  11/3/2021   Modify NextRecordset
+'* 1.0.4  18/3/2021   Add Recordset2JSon,MaxToJSonRows
+'* 1.0.5  20/3/2021   Add Recordset2JSonToEnd, Modify mRecordset2JSon
+'* 1.0.6  27/3/2021   Modify mRs2JSonTypeEnum,mRecordset2JSon, add Rows2JSon,IsTrimJSonValue
+'* 1.0.7  27/3/2021   Modify mRs2JSonTypeEnum,Row2JSon
+'* 1.0.8  4/4/2021   Remove mRecordset2JSon, Add Recordset2JSon
+'* 1.0.9  16/4/2021	Remove excess Me.ClearErr()
 '**********************************
 Public Class Recordset
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.8"
+	Private Const CLS_VERSION As String = "1.0.9"
 	Public Obj As Object
 	Private moPigJSon As PigJSon
 	Public Sub New()
@@ -133,7 +134,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.AbsolutePage
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("AbsolutePage.Get", ex)
 				Return Nothing
@@ -152,7 +152,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.AbsolutePosition
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("AbsolutePosition.Get", ex)
 				Return Nothing
@@ -171,7 +170,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.ActiveCommand
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveCommand.Get", ex)
 				Return Nothing
@@ -182,7 +180,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.ActiveConnection
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Get", ex)
 				Return Nothing
@@ -209,7 +206,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.BOF
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("BOF.Get", ex)
 				Return Nothing
@@ -220,7 +216,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Bookmark
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Bookmark.Get", ex)
 				Return Nothing
@@ -239,7 +234,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.CacheSize
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CacheSize.Get", ex)
 				Return Nothing
@@ -308,7 +302,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.CursorLocation
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CursorLocation.Get", ex)
 				Return Nothing
@@ -328,7 +321,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.CursorType
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CursorType.Get", ex)
 				Return Nothing
@@ -347,7 +339,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.DataMember
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DataMember.Get", ex)
 				Return Nothing
@@ -366,7 +357,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.DataSource
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("DataSource.Get", ex)
 				Return Nothing
@@ -393,7 +383,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.EditMode
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("EditMode.Get", ex)
 				Return Nothing
@@ -404,7 +393,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.EOF
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("EOF.Get", ex)
 				Return Nothing
@@ -417,7 +405,6 @@ Public Class Recordset
 				Dim oFields As New Fields
 				oFields.Obj = Me.Obj.Fields
 				Return oFields
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Fields.Get", ex)
 				Return Nothing
@@ -428,7 +415,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Filter
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Filter.Get", ex)
 				Return Nothing
@@ -467,8 +453,7 @@ Public Class Recordset
 
 	Public Function GetRows(Optional Rows As Long = -1, Optional Start As Long = 0, Optional Fields As Long = 0) As Object
 		Try
-			GetRows = Me.Obj.GetRows(Rows = -1, Start, Fields)
-			Me.ClearErr()
+			Return Me.Obj.GetRows(Rows = -1, Start, Fields)
 		Catch ex As Exception
 			Me.SetSubErrInf("GetRows", ex)
 			Return Nothing
@@ -476,8 +461,7 @@ Public Class Recordset
 	End Function
 	Public Function GetString(Optional StringFormat As StringFormatEnum = StringFormatEnum.adClipString, Optional NumRows As Long = -1, Optional ColumnDelimeter As String = "", Optional RowDelimeter As String = "", Optional NullExpr As String = "") As String
 		Try
-			GetString = Me.Obj.GetString(StringFormat, NumRows, ColumnDelimeter, RowDelimeter, NullExpr)
-			Me.ClearErr()
+			Return Me.Obj.GetString(StringFormat, NumRows, ColumnDelimeter, RowDelimeter, NullExpr)
 		Catch ex As Exception
 			Me.SetSubErrInf("GetString", ex)
 			Return Nothing
@@ -487,7 +471,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Index
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Index.Get", ex)
 				Return Nothing
@@ -506,7 +489,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.LockType
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("LockType.Get", ex)
 				Return Nothing
@@ -525,7 +507,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.MarshalOptions
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("MarshalOptions.Get", ex)
 				Return Nothing
@@ -544,7 +525,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.MaxRecords
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("MaxRecords.Get", ex)
 				Return Nothing
@@ -603,11 +583,14 @@ Public Class Recordset
 		Try
 			Dim oRecordset As New Recordset
 			oRecordset.Obj = Me.Obj.NextRecordset(RecordsAffected)
+			If oRecordset.Obj Is Nothing Then
+				Throw New Exception("Not NextRecordset")
+			End If
 			NextRecordset = oRecordset
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("NextRecordset", ex)
-			Return Nothing
+			Return Me
 		End Try
 	End Function
 	Public Sub Open(Optional Source As String = "", Optional ActiveConnection As String = "", Optional CursorType As CursorTypeEnum = CursorTypeEnum.adOpenForwardOnly, Optional LockType As LockTypeEnum = LockTypeEnum.adLockReadOnly, Optional Options As Long = -1)
@@ -624,10 +607,9 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.PageCount
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("PageCount.Get", ex)
-				Return Nothing
+				Return 0
 			End Try
 		End Get
 	End Property
@@ -635,10 +617,9 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.PageSize
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("PageSize.Get", ex)
-				Return Nothing
+				Return 0
 			End Try
 		End Get
 		Set(value As Long)
@@ -654,7 +635,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Properties
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Properties.Get", ex)
 				Return Nothing
@@ -666,10 +646,9 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.RecordCount
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("RecordCount.Get", ex)
-				Return Nothing
+				Return 0
 			End Try
 		End Get
 	End Property
@@ -709,7 +688,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Sort
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Sort.Get", ex)
 				Return Nothing
@@ -728,7 +706,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Source
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Source.Get", ex)
 				Return Nothing
@@ -747,7 +724,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.State
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("State.Get", ex)
 				Return Nothing
@@ -758,7 +734,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.Status
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Status.Get", ex)
 				Return Nothing
@@ -769,7 +744,6 @@ Public Class Recordset
 		Get
 			Try
 				Return Me.Obj.StayInSync
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("StayInSync.Get", ex)
 				Return Nothing

@@ -4,12 +4,13 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Properties
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.1
+'* Version: 1.0.2
 '* Create Time: 18/2/2021
+'* 1.0.2  16/4/2021	Remove excess Me.ClearErr()
 '**********************************
 Public Class Properties
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.1"
+	Private Const CLS_VERSION As String = "1.0.2"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
@@ -18,10 +19,9 @@ Public Class Properties
 		Get
 			Try
 				Return Me.Obj.Count
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Count.Get", ex)
-				Return Nothing
+				Return 0
 			End Try
 		End Get
 	End Property
@@ -31,7 +31,6 @@ Public Class Properties
 				Dim oProperty As New pProperty
 				oProperty.Obj = Me.Obj.Item(Index)
 				Return oProperty
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Item.Get", ex)
 				Return Nothing

@@ -4,17 +4,23 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Errors
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 18/2/2021
-'* 1.0.2	3/3/2021 Modify New
+'* 1.0.2  3/3/2021 Modify New
+'* 1.0.3  16/4/2021	Remove excess Me.ClearErr(), Modify New
 '**********************************
 Public Class Parameter
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
-		Me.Obj = CreateObject("ADODB.Parameter")
+		Try
+			Me.Obj = CreateObject("ADODB.Parameter")
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("New", ex)
+		End Try
 	End Sub
 	Public Enum ParameterDirectionEnum
 		adParamInput = 1

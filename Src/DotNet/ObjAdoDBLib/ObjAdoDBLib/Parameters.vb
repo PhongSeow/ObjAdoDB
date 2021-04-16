@@ -4,13 +4,14 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Errors
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 18/2/2021
-'1.0.2	3/3/2021	Modify Append
+'* 1.0.2	3/3/2021	Modify Append
+'* 1.0.3  16/4/2021	Remove excess Me.ClearErr()
 '**********************************
 Public Class Parameters
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
@@ -27,7 +28,6 @@ Public Class Parameters
 		Get
 			Try
 				Return Me.Obj.Count
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Count.Get", ex)
 				Return Nothing
@@ -54,7 +54,6 @@ Public Class Parameters
 		Get
 			Try
 				Return Me.Obj.Item(Index)
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Item(Index).Get", ex)
 				Return Nothing

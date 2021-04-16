@@ -4,13 +4,14 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Command
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 2/3/2021
-'1.0.2	3/3/2021	Modify ActiveConnection
+'* 1.0.2	3/3/2021	Modify ActiveConnection
+'* 1.0.3	16/4/2021	Remove excess Me.ClearErr(), Modify New
 '**********************************
 Public Class Command
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Obj As Object
 	Public Enum CommandTypeEnum
 		adCmdFile = 256
@@ -23,7 +24,12 @@ Public Class Command
 
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
-		Me.Obj = CreateObject("ADODB.Command")
+		Try
+			Me.Obj = CreateObject("ADODB.Command")
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("New", ex)
+		End Try
 	End Sub
 	Public Property ActiveConnection() As Connection
 		Get
@@ -31,7 +37,6 @@ Public Class Command
 				Dim oConnection As New Connection
 				oConnection.Obj = Me.Obj.ActiveConnection
 				Return oConnection
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Get", ex)
 				Return Nothing
@@ -40,7 +45,6 @@ Public Class Command
 		Set(value As Connection)
 			Try
 				Me.Obj.ActiveConnection = value.Obj
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Set", ex)
 			End Try
@@ -58,7 +62,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.CommandStream
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CommandStream.Get", ex)
 				Return Nothing
@@ -77,7 +80,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.CommandText
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CommandText.Get", ex)
 				Return Nothing
@@ -96,7 +98,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.CommandTimeout
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CommandTimeout.Get", ex)
 				Return Nothing
@@ -115,7 +116,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.CommandType
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("CommandType.Get", ex)
 				Return Nothing
@@ -135,7 +135,7 @@ Public Class Command
 			Dim oParameter As New Parameter
 			oParameter.Obj = Me.Obj.CreateParameter(Name, Type, Direction, Size, Value)
 			Return oParameter
-			Me.ClearErr()
+
 		Catch ex As Exception
 			Me.SetSubErrInf("CreateParameter", ex)
 			Return Nothing
@@ -145,7 +145,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.Dialect
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Dialect.Get", ex)
 				Return Nothing
@@ -165,7 +164,7 @@ Public Class Command
 			Dim oRecordset As New Recordset
 			oRecordset.Obj = Me.Obj.Execute(RecordsAffected, Parameters, Options)
 			Return oRecordset
-			Me.ClearErr()
+
 		Catch ex As Exception
 			Me.SetSubErrInf("Execute", ex)
 			Return Nothing
@@ -175,7 +174,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.Name
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Name.Get", ex)
 				Return Nothing
@@ -194,7 +192,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.NamedParameters
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("NamedParameters.Get", ex)
 				Return Nothing
@@ -215,7 +212,7 @@ Public Class Command
 				Dim oParameters As New Parameters
 				oParameters.Obj = Me.Obj.Parameters
 				Return oParameters
-				Me.ClearErr()
+
 			Catch ex As Exception
 				Me.SetSubErrInf("Parameters.Get", ex)
 				Return Nothing
@@ -234,7 +231,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.Prepared
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Prepared.Get", ex)
 				Return Nothing
@@ -253,7 +249,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.Properties
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Properties.Get", ex)
 				Return Nothing
@@ -272,7 +267,6 @@ Public Class Command
 		Get
 			Try
 				Return Me.Obj.State
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("State.Get", ex)
 				Return Nothing

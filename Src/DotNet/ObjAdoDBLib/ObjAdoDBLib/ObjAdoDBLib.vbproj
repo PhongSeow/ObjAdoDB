@@ -11,17 +11,17 @@
     <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBLib</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
-    <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon</PackageTags>
+    <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.8.15</Version>
+    <Version>1.0.9.5</Version>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed it in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.
 If the program is running in IIS, the advanced settings need set Enable 32-bit Applications of Application pools is true.
 The interface between different databases is simplified.
 Support the transformation of query results into JSON.</Description>
-    <PackageReleaseNotes>Add current recordset to JSon, and fix some bugs.</PackageReleaseNotes>
-    <AssemblyVersion>1.0.8.15</AssemblyVersion>
+    <PackageReleaseNotes>Code optimization</PackageReleaseNotes>
+    <AssemblyVersion>1.0.9.5</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

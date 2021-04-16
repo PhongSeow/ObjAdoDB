@@ -4,16 +4,17 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Fields
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.5
+'* Version: 1.0.6
 '* Create Time: 21/2/2021
-'*1.0.2  19/3/2021   Add BooleanValue,DateValue,DecValue,IntValue,LngValue,StrValue,DataCategory
-'*1.0.3  20/3/2021   Modify DecValue, add ValueForJSon
-'*1.0.4  27/3/2021   Modify StrValue,LngValue
-'*1.0.5  4/4/2021   Modify IntValue, add mSrc2JSonStr,mLng2Date,IsGetValueErrRetNothing,DateValue
+'* 1.0.2  19/3/2021   Add BooleanValue,DateValue,DecValue,IntValue,LngValue,StrValue,DataCategory
+'* 1.0.3  20/3/2021   Modify DecValue, add ValueForJSon
+'* 1.0.4  27/3/2021   Modify StrValue,LngValue
+'* 1.0.5  4/4/2021   Modify IntValue, add mSrc2JSonStr,mLng2Date,IsGetValueErrRetNothing,DateValue
+'* 1.0.6  16/4/2021	Remove excess Me.ClearErr()
 '**********************************
 Public Class Field
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.5"
+	Private Const CLS_VERSION As String = "1.0.6"
 	Public Obj As Object
 
 	Public Enum DataCategoryEnum
