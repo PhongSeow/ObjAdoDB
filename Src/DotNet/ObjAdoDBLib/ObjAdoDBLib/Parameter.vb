@@ -4,14 +4,15 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Errors
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.3
+'* Version: 1.0.4
 '* Create Time: 18/2/2021
 '* 1.0.2  3/3/2021 Modify New
 '* 1.0.3  16/4/2021	Remove excess Me.ClearErr(), Modify New
+'* 1.0.4  17/4/2021	Add Value
 '**********************************
 Public Class Parameter
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.3"
+	Private Const CLS_VERSION As String = "1.0.4"
 	Public Obj As Object
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
@@ -33,7 +34,6 @@ Public Class Parameter
 		Get
 			Try
 				Return Me.Obj.Attributes
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Attributes.Get", ex)
 				Return Nothing
@@ -52,7 +52,6 @@ Public Class Parameter
 		Get
 			Try
 				Return Me.Obj.Direction
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Direction.Get", ex)
 				Return Nothing
@@ -71,7 +70,6 @@ Public Class Parameter
 		Get
 			Try
 				Return Me.Obj.Name
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("Name.Get", ex)
 				Return Nothing
@@ -90,7 +88,6 @@ Public Class Parameter
 		Get
 			Try
 				Return Me.Obj.NumericScale
-				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("NumericScale.Get", ex)
 				Return Nothing
@@ -102,6 +99,24 @@ Public Class Parameter
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("NumericScale.Set", ex)
+			End Try
+		End Set
+	End Property
+	Public Property Value() As Object
+		Get
+			Try
+				Return Me.Obj.Value
+			Catch ex As Exception
+				Me.SetSubErrInf("Value.Get", ex)
+				Return Nothing
+			End Try
+		End Get
+		Set(Value As Object)
+			Try
+				Me.Obj.Value = Value
+				Me.ClearErr()
+			Catch ex As Exception
+				Me.SetSubErrInf("Value.Set", ex)
 			End Try
 		End Set
 	End Property

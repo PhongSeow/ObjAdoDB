@@ -8,10 +8,11 @@
 '* Create Time: 2/3/2021
 '* 1.0.2	3/3/2021	Modify ActiveConnection
 '* 1.0.3	16/4/2021	Remove excess Me.ClearErr(), Modify New
+'* 1.0.4	17/4/2021	Modify State
 '**********************************
 Public Class Command
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.3"
+	Private Const CLS_VERSION As String = "1.0.4"
 	Public Obj As Object
 	Public Enum CommandTypeEnum
 		adCmdFile = 256
@@ -263,22 +264,14 @@ Public Class Command
 			End Try
 		End Set
 	End Property
-	Public Property State() As Long
+	Public ReadOnly Property State() As Long
 		Get
 			Try
 				Return Me.Obj.State
 			Catch ex As Exception
 				Me.SetSubErrInf("State.Get", ex)
-				Return Nothing
+				Return Long.MinValue
 			End Try
 		End Get
-		Set(value As Long)
-			Try
-				Me.Obj.State = value
-				Me.ClearErr()
-			Catch ex As Exception
-				Me.SetSubErrInf("State.Set", ex)
-			End Try
-		End Set
 	End Property
 End Class
