@@ -36,7 +36,7 @@ Public Class CmdSQLSrvSp
 		adNChar = 239
 		adNText = 99
 		adNumeric = 108
-		adNvarchar = 231
+		adNVarchar = 231
 		adReal = 59
 		adSmallDateTime = 58
 		adSmallInt = 52

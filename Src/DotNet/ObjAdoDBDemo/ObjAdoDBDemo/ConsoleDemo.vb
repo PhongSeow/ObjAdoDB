@@ -33,6 +33,7 @@ Public Class ConsoleDemo
             Console.WriteLine("Press G to Recordset.NextRecordset")
             Console.WriteLine("Press H to Test Command")
             Console.WriteLine("Press I to Test JSon")
+            Console.WriteLine("Press J to Execute StoredProcedure")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -136,6 +137,7 @@ Public Class ConsoleDemo
                             Dim i As Integer
                             For i = 0 To .Fields.Count - 1
                                 Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                Console.WriteLine(".Fields.Item(" & i & ").Type=" & .Fields.Item(i).Type.ToString)
                             Next
                         End If
                         Console.WriteLine("PageCount=" & .PageCount)
@@ -187,6 +189,7 @@ Public Class ConsoleDemo
                         .CommandText = "sp_helpdb"
                         Console.WriteLine("CreateParameter @dbname=""master""")
                         .Parameters.Append(.CreateParameter("@dbname", Field.DataTypeEnum.adVarChar, Parameter.ParameterDirectionEnum.adParamInput, 128, "master"))
+                        .Parameters.Item("@dbname").Value = "WxWorkDB"
                         If .LastErr <> "" Then
                             Console.WriteLine(.LastErr)
                         Else
@@ -232,7 +235,36 @@ Public Class ConsoleDemo
                                 Exit Do
                         End Select
                     Loop
-
+                Case ConsoleKey.J
+                    Console.WriteLine("*******************")
+                    Console.WriteLine("Execute StoredProcedure")
+                    Console.WriteLine("*******************")
+                    Dim oCmdSQLSrvSp As New CmdSQLSrvSp("sp_helpdb")
+                    With oCmdSQLSrvSp
+                        .ActiveConnection = Me.Conn
+                        .AddPara("@dbname", CmdSQLSrvSp.SQLSrvDataTypeEnum.adNvarchar, 128)
+                        .ParaValue("@dbname") = "master"
+                        Console.WriteLine("Execute")
+                        Dim rsAny = .Execute()
+                        If .LastErr <> "" Then
+                            Console.WriteLine(.LastErr)
+                        Else
+                            Console.WriteLine("OK")
+                            Console.WriteLine("RecordsAffected=" & .RecordsAffected)
+                            Console.WriteLine("ReturnValue=" & .ReturnValue)
+                            With rsAny
+                                Console.WriteLine("Fields.Count=" & .Fields.Count)
+                                If .Fields.Count > 0 Then
+                                    Dim i As Integer
+                                    For i = 0 To .Fields.Count - 1
+                                        Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                    Next
+                                End If
+                                Console.WriteLine("PageCount=" & .PageCount)
+                                Console.WriteLine("EOF=" & .EOF)
+                            End With
+                        End If
+                    End With
             End Select
         Loop
     End Sub
