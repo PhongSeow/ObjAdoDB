@@ -10,6 +10,7 @@
 '* 1.0.3  13/3/2021   Add ProviderEnum,SetConnSQLServer,SetConnAccess
 '* 1.0.4  19/3/2021   Add DBTypeEnum,DBType
 '* 1.0.5  16/4/2021	Remove excess Me.ClearErr(), Modify BeginTrans
+'* 1.0.6  2/5/2021	Add ConnStateEnum, modify State
 '**********************************
 Public Class Connection
 	Inherits PigBaseMini
@@ -22,6 +23,14 @@ Public Class Connection
 		Oracle = 20
 		MySQL = 30
 		Access = 40
+	End Enum
+
+	Public Enum ConnStateEnum
+		adStateClosed = 0
+		adStateOpen = 1
+		adStateConnecting = 2
+		adStateExecuting = 4
+		adStateFetching = 8
 	End Enum
 
 	Public Enum ProviderEnum
@@ -444,16 +453,16 @@ Public Class Connection
 			Me.SetSubErrInf("RollbackTrans", ex)
 		End Try
 	End Sub
-	Public Property State() As Long
+	Public Property State() As ConnStateEnum
 		Get
 			Try
 				Return Me.Obj.State
 			Catch ex As Exception
 				Me.SetSubErrInf("State.Get", ex)
-				Return Long.MinValue
+				Return ConnStateEnum.adStateClosed
 			End Try
 		End Get
-		Set(value As Long)
+		Set(value As ConnStateEnum)
 			Try
 				Me.Obj.State = value
 				Me.ClearErr()
