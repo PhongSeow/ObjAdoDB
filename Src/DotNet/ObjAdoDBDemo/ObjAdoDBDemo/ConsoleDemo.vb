@@ -2,6 +2,8 @@
 
 Public Class ConsoleDemo
     Public Conn As New Connection
+    Public DBType As Connection.DBTypeEnum
+    Public ConnSQLSrv As ConnSQLSrv
     Public ConnStr As String
     Public SQL As String
     Public RS As Recordset
@@ -10,6 +12,7 @@ Public Class ConsoleDemo
     Public DBPwd As String = ""
     Public CurrDB As String = "master"
     Public Provider As Connection.ProviderEnum
+    Public ProviderSQLSrv As ConnSQLSrv.SQLSrvProviderEnum
     Public CurrConsoleKey As ConsoleKey
     Public InpStr As String
     Public AccessFilePath As String
@@ -51,15 +54,16 @@ Public Class ConsoleDemo
                             Case ConsoleKey.Q
                                 Exit Do
                             Case ConsoleKey.A
+                                Me.DBType = Connection.DBTypeEnum.SQLServer
                                 Console.WriteLine("Is Use Microsoft SQL Server OLEDB ? (Y/n)")
                                 Me.InpStr = Console.ReadLine()
                                 Select Case Me.InpStr
                                     Case "Y", "y", ""
-                                        Me.Provider = Connection.ProviderEnum.MicrosoftSQLServer
-                                        Console.WriteLine("Provider=MicrosoftSQLServer")
+                                        Me.ProviderSQLSrv = ConnSQLSrv.SQLSrvProviderEnum.MicrosoftSQLServer
+                                        Console.WriteLine("ProviderSQLSrv=MicrosoftSQLServer")
                                     Case Else
-                                        Me.Provider = Connection.ProviderEnum.MicrosoftSQLServer2012NativeClient
-                                        Console.WriteLine("Provider=MicrosoftSQLServer2012NativeClient")
+                                        Me.ProviderSQLSrv = ConnSQLSrv.SQLSrvProviderEnum.MicrosoftSQLServer2012NativeClient
+                                        Console.WriteLine("ProviderSQLSrv=MicrosoftSQLServer2012NativeClient")
                                 End Select
                                 Console.WriteLine("Input SQL Server:" & Me.DBSrv)
                                 Me.DBSrv = Console.ReadLine()
@@ -73,7 +77,7 @@ Public Class ConsoleDemo
                                 Me.InpStr = Console.ReadLine()
                                 Select Case Me.InpStr
                                     Case "Y", "y", ""
-                                        Me.Conn.SetConnSQLServer(Me.DBSrv, Me.CurrDB, Me.Provider)
+                                        Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.CurrDB, Me.ProviderSQLSrv)
                                     Case Else
                                         Console.WriteLine("Input DB User:" & Me.CurrDB)
                                         Me.DBUser = Console.ReadLine()
@@ -82,11 +86,11 @@ Public Class ConsoleDemo
                                         Console.WriteLine("Input DB Password:")
                                         Me.DBPwd = Console.ReadLine()
                                         Console.WriteLine("DB Password=" & Me.DBPwd)
-                                        Me.Conn.SetConnSQLServer(Me.DBSrv, Me.DBUser, Me.DBPwd, Me.CurrDB, Me.Provider)
+                                        Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.CurrDB, Me.DBUser, Me.DBPwd, Me.ProviderSQLSrv)
                                 End Select
-                                Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
                                 Exit Do
                             Case ConsoleKey.B
+                                Me.DBType = Connection.DBTypeEnum.Access
                                 Console.WriteLine("Input Access File Path:" & Me.AccessFilePath)
                                 Me.AccessFilePath = Console.ReadLine()
                                 Console.WriteLine("Access File Path=" & Me.AccessFilePath)
@@ -99,34 +103,68 @@ Public Class ConsoleDemo
                     Console.WriteLine("#################")
                     Console.WriteLine("Open Connection")
                     Console.WriteLine("#################")
-                    With Me.Conn
-                        .Open()
-                        If .LastErr <> "" Then
-                            Console.WriteLine("Connect Error:" & .LastErr)
-                        Else
-                            Console.WriteLine("Connect OK")
-                        End If
-                    End With
+                    Select Case Me.DBType
+                        Case Connection.DBTypeEnum.SQLServer
+                            With Me.ConnSQLSrv
+                                Console.WriteLine("OpenOrKeepActive:")
+                                .OpenOrKeepActive()
+                                If .LastErr <> "" Then
+                                    Console.WriteLine(.LastErr)
+                                Else
+                                    Console.WriteLine("OK")
+                                End If
+                            End With
+                        Case Else
+                            With Me.Conn
+                                .Open()
+                                If .LastErr <> "" Then
+                                    Console.WriteLine("Connect Error:" & .LastErr)
+                                Else
+                                    Console.WriteLine("Connect OK")
+                                End If
+                            End With
+                    End Select
                 Case ConsoleKey.C
                     Console.WriteLine("#################")
                     Console.WriteLine("Show Connection Information")
                     Console.WriteLine("#################")
-                    Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
-                    Console.WriteLine("State=" & Me.Conn.State)
+                    Select Case Me.DBType
+                        Case Connection.DBTypeEnum.SQLServer
+                            Console.WriteLine("ConnectionString=" & Me.ConnSQLSrv.Connection.ConnectionString)
+                            Console.WriteLine("State=" & Me.ConnSQLSrv.Connection.State)
+                        Case Else
+                            Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
+                            Console.WriteLine("State=" & Me.Conn.State)
+                    End Select
                 Case ConsoleKey.D
                     Console.WriteLine("#################")
-                    Console.WriteLine("Create Recordset with Execute")
-                    Console.WriteLine("#################")
-                    Console.WriteLine("Input SQL:")
-                    Me.SQL = Console.ReadLine()
-                    With Me.Conn
-                        Me.RS = .Execute(SQL)
-                        If .LastErr <> "" Then
-                            Console.WriteLine("Execute Error:" & .LastErr)
-                        Else
-                            Console.WriteLine("Execute OK")
-                        End If
-                    End With
+                            Console.WriteLine("Create Recordset with Execute")
+                            Console.WriteLine("#################")
+                            Console.WriteLine("Input SQL:")
+                    Select Case Me.DBType
+                        Case Connection.DBTypeEnum.SQLServer
+                            Me.SQL = Console.ReadLine()
+                            With Me.ConnSQLSrv.Connection
+                                Console.WriteLine("Execute:")
+                                Me.RS = .Execute(SQL)
+                                If .LastErr <> "" Then
+                                    Console.WriteLine(.LastErr)
+                                Else
+                                    Console.WriteLine("OK")
+                                End If
+                            End With
+                        Case Else
+                            Me.SQL = Console.ReadLine()
+                            With Me.Conn
+                                Console.WriteLine("Execute:")
+                                Me.RS = .Execute(SQL)
+                                If .LastErr <> "" Then
+                                    Console.WriteLine(.LastErr)
+                                Else
+                                    Console.WriteLine("OK")
+                                End If
+                            End With
+                    End Select
                 Case ConsoleKey.E
                     Console.WriteLine("#################")
                     Console.WriteLine("Show Recordset Information")
@@ -237,12 +275,12 @@ Public Class ConsoleDemo
                     Loop
                 Case ConsoleKey.J
                     Console.WriteLine("*******************")
-                    Console.WriteLine("Execute StoredProcedure")
+                    Console.WriteLine("Execute SQL Server StoredProcedure")
                     Console.WriteLine("*******************")
                     Dim oCmdSQLSrvSp As New CmdSQLSrvSp("sp_helpdb")
                     With oCmdSQLSrvSp
-                        .ActiveConnection = Me.Conn
-                        .AddPara("@dbname", CmdSQLSrvSp.SQLSrvDataTypeEnum.adNvarchar, 128)
+                        .ActiveConnection = Me.ConnSQLSrv.Connection
+                        .AddPara("@dbname", CmdSQLSrvSp.SQLSrvDataTypeEnum.adNVarchar, 128)
                         .ParaValue("@dbname") = "master"
                         Console.WriteLine("Execute")
                         Dim rsAny = .Execute()
