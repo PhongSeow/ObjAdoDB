@@ -4,13 +4,14 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Connection for SQL Server
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 2/5/2021
 '* 1.0.2	18/4/2021	Modify OpenOrKeepActive
+'* 1.0.3	6/5/2021	Modify CommandTimeout, add IsDBConnReady
 '**********************************
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Connection As Connection
 
 	Public Enum SQLSrvProviderEnum
@@ -152,6 +153,7 @@ Public Class ConnSQLSrv
 		End Set
 	End Property
 
+
 	Private Sub mNew(PrincipalSQLServer As String, CurrDatabase As String, Optional DBUser As String = "", Optional DBUserPwd As String = "", Optional Provider As SQLSrvProviderEnum = SQLSrvProviderEnum.MicrosoftSQLServer)
 		Dim strStepName As String = ""
 		Try
@@ -202,7 +204,7 @@ Public Class ConnSQLSrv
 		Get
 			Return mlngCommandTimeout
 		End Get
-		Friend Set(ByVal value As Long)
+		Set(ByVal value As Long)
 			mlngCommandTimeout = value
 		End Set
 	End Property
@@ -215,7 +217,7 @@ Public Class ConnSQLSrv
 		Get
 			Return mlngConnectionTimeout
 		End Get
-		Friend Set(ByVal value As Long)
+		Set(ByVal value As Long)
 			mlngConnectionTimeout = value
 		End Set
 	End Property
@@ -255,5 +257,21 @@ Public Class ConnSQLSrv
 			Me.ConnStatus = ConnStatusEnum.Unknow
 		End Try
 	End Sub
+
+	Public ReadOnly Property IsDBConnReady() As Boolean
+		Get
+			Try
+				Select Case Me.ConnStatus
+					Case ConnStatusEnum.PrincipalAndMirrorOnline, ConnStatusEnum.PrincipalOfflineMirrorOnline, ConnStatusEnum.PrincipalOnline, ConnStatusEnum.PrincipalOnlineMirrorOffline
+						Return True
+					Case Else
+						Return False
+				End Select
+			Catch ex As Exception
+				Me.SetSubErrInf("IsDBConnReady", ex)
+				Return False
+			End Try
+		End Get
+	End Property
 
 End Class

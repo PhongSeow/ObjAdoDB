@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server StoredProcedure
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.4
+'* Version: 1.0.5
 '* Create Time: 17/4/2021
 '* 1.0.2	18/4/2021	Modify ActiveConnection
 '* 1.0.3	24/4/2021	Add mAdoDataType
@@ -261,5 +261,6 @@ Public Class CmdSQLSrvSp
 			Me.SetSubErrInf("mAddPara", strStepName, ex)
 		End Try
 	End Sub
+
 
 End Class
