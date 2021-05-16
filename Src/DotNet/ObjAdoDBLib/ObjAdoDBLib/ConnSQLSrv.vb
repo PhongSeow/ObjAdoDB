@@ -4,15 +4,53 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Connection for SQL Server
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.3
+'* Version: 1.0.4
 '* Create Time: 2/5/2021
 '* 1.0.2	18/4/2021	Modify OpenOrKeepActive
 '* 1.0.3	6/5/2021	Modify CommandTimeout, add IsDBConnReady
+'* 1.0.4	16/5/2021	Add SQLSrvDataTypeEnum, Modify OpenOrKeepActive
 '**********************************
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.3"
+	Private Const CLS_VERSION As String = "1.0.4"
 	Public Connection As Connection
+
+	Public Enum SQLSrvDataTypeEnum
+		adBigint = 127
+		adBinary = 173
+		adBit = 104
+		adChar = 175
+		adDate = 40
+		adDatetime = 61
+		adDatetime2 = 42
+		'adDatetimeoffset = 43
+		adDecimal = 106
+		adFloat = 62
+		'adGeography = 240
+		'adGeometry = 240
+		'adHierarchyid = 240
+		adImage = 34
+		adInt = 56
+		adMoney = 60
+		adNChar = 239
+		adNText = 99
+		adNumeric = 108
+		adNVarchar = 231
+		adReal = 59
+		adSmallDateTime = 58
+		adSmallInt = 52
+		adSmallMoney = 122
+		adSql_Variant = 98
+		adSysname = 231
+		adText = 35
+		'adTime = 41
+		adTimeStamp = 189
+		adTinyInt = 48
+		adUniqueIdentifier = 36
+		adVarBinary = 165
+		adVarChar = 167
+		'adXml = 241
+	End Enum
 
 	Public Enum SQLSrvProviderEnum
 		MicrosoftSQLServer = 90
@@ -244,6 +282,7 @@ Public Class ConnSQLSrv
 								.CommandTimeout = Me.CommandTimeout
 								strStepName = "Open"
 								.Open()
+								If .LastErr <> "" Then Throw New Exception(.LastErr)
 						End Select
 					Case RunModeEnum.Mirror
 						Throw New Exception("Not support now")

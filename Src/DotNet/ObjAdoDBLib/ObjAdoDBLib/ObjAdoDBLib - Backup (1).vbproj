@@ -13,7 +13,7 @@
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon SQLServer StoredProcedure ConnSQLSrv</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.15.18</Version>
+    <Version>1.0.15.8</Version>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed it in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.
@@ -21,9 +21,9 @@ If the program is running in IIS, the advanced settings need set Enable 32-bit A
 The interface between different databases is simplified.
 Support the transformation of query results into JSON.
 Friendly calling interface for Command of SQL Server StoredProcedure and SQL statement Text.</Description>
-    <PackageReleaseNotes>Fix for Command of SQL Server StoredProcedure.</PackageReleaseNotes>
-    <AssemblyVersion>1.0.15.18</AssemblyVersion>
-    <FileVersion>1.0.15.18</FileVersion>
+    <PackageReleaseNotes>Add Command for SQL Server SQL statement Text</PackageReleaseNotes>
+    <AssemblyVersion>1.0.15.8</AssemblyVersion>
+    <FileVersion>1.0.15.7</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net20|AnyCPU'">

@@ -201,6 +201,7 @@ Public Class Connection
 	Public Property ConnectionString() As String
 		Get
 			Try
+				If Me.Obj Is Nothing Then Throw New Exception("Obj is Nothing")
 				Return Me.Obj.ConnectionString
 			Catch ex As Exception
 				Me.SetSubErrInf("ConnectionString.Get", ex)

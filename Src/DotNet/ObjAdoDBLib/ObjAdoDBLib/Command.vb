@@ -4,15 +4,16 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Command
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.3
+'* Version: 1.0.5
 '* Create Time: 2/3/2021
 '* 1.0.2	3/3/2021	Modify ActiveConnection
 '* 1.0.3	16/4/2021	Remove excess Me.ClearErr(), Modify New
 '* 1.0.4	17/4/2021	Modify State
+'* 1.0.5	16/5/2021	Modify ActiveConnection
 '**********************************
 Public Class Command
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.4"
+	Private Const CLS_VERSION As String = "1.0.5"
 	Public Obj As Object
 	Public Enum CommandTypeEnum
 		adCmdFile = 256
@@ -37,6 +38,7 @@ Public Class Command
 			Try
 				Dim oConnection As New Connection
 				oConnection.Obj = Me.Obj.ActiveConnection
+				If oConnection.LastErr <> "" Then Throw New Exception(oConnection.LastErr)
 				Return oConnection
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Get", ex)
@@ -46,6 +48,7 @@ Public Class Command
 		Set(value As Connection)
 			Try
 				Me.Obj.ActiveConnection = value.Obj
+				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Set", ex)
 			End Try
@@ -213,7 +216,6 @@ Public Class Command
 				Dim oParameters As New Parameters
 				oParameters.Obj = Me.Obj.Parameters
 				Return oParameters
-
 			Catch ex As Exception
 				Me.SetSubErrInf("Parameters.Get", ex)
 				Return Nothing

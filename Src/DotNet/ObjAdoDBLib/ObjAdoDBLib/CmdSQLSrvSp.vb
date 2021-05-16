@@ -4,54 +4,18 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server StoredProcedure
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.5
+'* Version: 1.0.6
 '* Create Time: 17/4/2021
 '* 1.0.2	18/4/2021	Modify ActiveConnection
 '* 1.0.3	24/4/2021	Add mAdoDataType
 '* 1.0.4	25/4/2021	Modify New
 '* 1.0.5	28/4/2021	Add ActiveConnection,AddPara,ParaValue,Execute
+'* 1.0.6	16/5/2021	SQLSrvDataTypeEnum move to ConnSQLSrv, Modify Execute,ParaValue,ActiveConnection
 '**********************************
 Public Class CmdSQLSrvSp
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.5"
+	Private Const CLS_VERSION As String = "1.0.6"
 	Private moCommand As Command
-
-	Public Enum SQLSrvDataTypeEnum
-		adBigint = 127
-		adBinary = 173
-		adBit = 104
-		adChar = 175
-		adDate = 40
-		adDatetime = 61
-		adDatetime2 = 42
-		'adDatetimeoffset = 43
-		adDecimal = 106
-		adFloat = 62
-		'adGeography = 240
-		'adGeometry = 240
-		'adHierarchyid = 240
-		adImage = 34
-		adInt = 56
-		adMoney = 60
-		adNChar = 239
-		adNText = 99
-		adNumeric = 108
-		adNVarchar = 231
-		adReal = 59
-		adSmallDateTime = 58
-		adSmallInt = 52
-		adSmallMoney = 122
-		adSql_Variant = 98
-		adSysname = 231
-		adText = 35
-		'adTime = 41
-		adTimeStamp = 189
-		adTinyInt = 48
-		adUniqueIdentifier = 36
-		adVarBinary = 165
-		adVarChar = 167
-		'adXml = 241
-	End Enum
 
 	Public Sub New(SpName As String)
 		MyBase.New(CLS_VERSION)
@@ -108,76 +72,10 @@ Public Class CmdSQLSrvSp
 	End Property
 
 
-
-	''' <summary>
-	''' SQLSrvDataTypeEnum to DataTypeEnum
-	''' </summary>
-	Private ReadOnly Property mAdoDataType(SQLSrvDataType As SQLSrvDataTypeEnum) As Field.DataTypeEnum
-		Get
-			Select Case SQLSrvDataType
-				Case SQLSrvDataTypeEnum.adBigint
-					Return Field.DataTypeEnum.adBigInt
-				Case SQLSrvDataTypeEnum.adBinary
-					Return Field.DataTypeEnum.adBinary
-				Case SQLSrvDataTypeEnum.adBit
-					Return Field.DataTypeEnum.adBoolean
-				Case SQLSrvDataTypeEnum.adChar
-					Return Field.DataTypeEnum.adChar
-				Case SQLSrvDataTypeEnum.adDate
-					Return Field.DataTypeEnum.adDBDate
-				Case SQLSrvDataTypeEnum.adDatetime, SQLSrvDataTypeEnum.adDatetime2
-					Return Field.DataTypeEnum.adDBTimeStamp
-				Case SQLSrvDataTypeEnum.adDecimal
-					Return Field.DataTypeEnum.adNumeric
-				Case SQLSrvDataTypeEnum.adFloat
-					Return Field.DataTypeEnum.adDouble
-				Case SQLSrvDataTypeEnum.adImage
-					Return Field.DataTypeEnum.adLongVarBinary
-				Case SQLSrvDataTypeEnum.adInt
-					Return Field.DataTypeEnum.adInteger
-				Case SQLSrvDataTypeEnum.adMoney
-					Return Field.DataTypeEnum.adCurrency
-				Case SQLSrvDataTypeEnum.adNChar
-					Return Field.DataTypeEnum.adWChar
-				Case SQLSrvDataTypeEnum.adNText
-					Return Field.DataTypeEnum.adLongVarWChar
-				Case SQLSrvDataTypeEnum.adNumeric
-					Return Field.DataTypeEnum.adNumeric
-				Case SQLSrvDataTypeEnum.adNvarchar
-					Return Field.DataTypeEnum.adVarWChar
-				Case SQLSrvDataTypeEnum.adReal
-					Return Field.DataTypeEnum.adSingle
-				Case SQLSrvDataTypeEnum.adSmallDateTime
-					Return Field.DataTypeEnum.adDBTimeStamp
-				Case SQLSrvDataTypeEnum.adSmallInt
-					Return Field.DataTypeEnum.adSmallInt
-				Case SQLSrvDataTypeEnum.adSmallMoney
-					Return Field.DataTypeEnum.adCurrency
-				Case SQLSrvDataTypeEnum.adSql_Variant
-					Return Field.DataTypeEnum.adVariant
-				Case SQLSrvDataTypeEnum.adSysname
-					Return Field.DataTypeEnum.adVarWChar
-				Case SQLSrvDataTypeEnum.adText
-					Return Field.DataTypeEnum.adLongVarChar
-				Case SQLSrvDataTypeEnum.adTimeStamp
-					Return Field.DataTypeEnum.adBinary
-				Case SQLSrvDataTypeEnum.adTinyInt
-					Return Field.DataTypeEnum.adUnsignedTinyInt
-				Case SQLSrvDataTypeEnum.adUniqueIdentifier
-					Return Field.DataTypeEnum.adGUID
-				Case SQLSrvDataTypeEnum.adVarBinary
-					Return Field.DataTypeEnum.adVarBinary
-				Case SQLSrvDataTypeEnum.adVarChar
-					Return Field.DataTypeEnum.adVarChar
-				Case Else
-					Return Field.DataTypeEnum.adVarChar
-			End Select
-		End Get
-	End Property
-
 	Public Function Execute() As Recordset
 		Try
 			Execute = moCommand.Execute(mlngRecordsAffected)
+			If moCommand.LastErr <> "" Then Throw New Exception(moCommand.LastErr)
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("Execute", ex)
@@ -188,7 +86,7 @@ Public Class CmdSQLSrvSp
 	Public Property ParaValue(ParaName As String) As Object
 		Get
 			Try
-				ParaValue = moCommand.Parameters.Item(ParaName)
+				ParaValue = moCommand.Parameters.Obj(ParaName).Value
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ParaValue.Get", ex)
@@ -197,7 +95,7 @@ Public Class CmdSQLSrvSp
 		End Get
 		Set(value As Object)
 			Try
-				moCommand.ActiveConnection = value
+				moCommand.Parameters.Obj(ParaName).Value = value
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ParaValue.Set", ex)
@@ -217,34 +115,36 @@ Public Class CmdSQLSrvSp
 		Set(value As Connection)
 			Try
 				moCommand.ActiveConnection = value
+				If moCommand.LastErr <> "" Then Throw New Exception(moCommand.LastErr)
+				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Set", ex)
 			End Try
 		End Set
 	End Property
 
-	Public Sub AddPara(ParaName As String, DataType As SQLSrvDataTypeEnum)
+	Public Sub AddPara(ParaName As String, DataType As ConnSQLSrv.SQLSrvDataTypeEnum)
 		Me.mAddPara(ParaName, DataType)
 	End Sub
 
-	Public Sub AddPara(ParaName As String, DataType As SQLSrvDataTypeEnum, IsOutPut As Boolean)
+	Public Sub AddPara(ParaName As String, DataType As ConnSQLSrv.SQLSrvDataTypeEnum, IsOutPut As Boolean)
 		Me.mAddPara(ParaName, DataType,, IsOutPut)
 	End Sub
 
-	Public Sub AddPara(ParaName As String, DataType As SQLSrvDataTypeEnum, Size As Long)
+	Public Sub AddPara(ParaName As String, DataType As ConnSQLSrv.SQLSrvDataTypeEnum, Size As Long)
 		Me.mAddPara(ParaName, DataType, Size)
 	End Sub
 
-	Public Sub AddPara(ParaName As String, DataType As SQLSrvDataTypeEnum, Size As Long, IsOutPut As Boolean)
+	Public Sub AddPara(ParaName As String, DataType As ConnSQLSrv.SQLSrvDataTypeEnum, Size As Long, IsOutPut As Boolean)
 		Me.mAddPara(ParaName, DataType, Size)
 	End Sub
 
-	Private Sub mAddPara(ParaName As String, DataType As SQLSrvDataTypeEnum, Optional Size As Long = -1, Optional IsOutPut As Boolean = False)
+	Private Sub mAddPara(ParaName As String, DataType As ConnSQLSrv.SQLSrvDataTypeEnum, Optional Size As Long = -1, Optional IsOutPut As Boolean = False)
 		Dim strStepName As String = ""
 		Try
 			Dim oParameter As Parameter
 			Dim dyeAny As Field.DataTypeEnum
-			dyeAny = Me.mAdoDataType(DataType)
+			dyeAny = GetSQLSrvAdoDataType(DataType)
 			Dim pdeAny As Parameter.ParameterDirectionEnum
 			If IsOutPut = True Then
 				pdeAny = Parameter.ParameterDirectionEnum.adParamOutput
