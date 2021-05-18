@@ -1,16 +1,17 @@
 ﻿'**********************************
-'* Name: CmdSQLSrvSp
+'* Name: CmdSQLSrvText
 '* Author: Seow Phong
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server SQL statement Text
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.2
+'* Version: 1.0.3
 '* Create Time: 15/5/2021
 '* 1.0.2	18/4/2021	Modify Execute,ParaValue
+'* 1.0.3	17/5/2021	Modify ParaValue,ActiveConnection,Execute
 '**********************************
 Public Class CmdSQLSrvText
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.2"
+	Private Const CLS_VERSION As String = "1.0.3"
 	Public Property SQLText As String
 	Private moCommand As Command
 
@@ -41,7 +42,7 @@ Public Class CmdSQLSrvText
 		End Get
 		Set(value As Connection)
 			Try
-				moCommand.ActiveConnection = value
+				moCommand.Obj.ActiveConnection = value.Obj
 				If moCommand.LastErr <> "" Then Throw New Exception(moCommand.LastErr)
 			Catch ex As Exception
 				Me.SetSubErrInf("ActiveConnection.Set", ex)
@@ -79,7 +80,8 @@ Public Class CmdSQLSrvText
 
 	Public Function Execute() As Recordset
 		Try
-			Execute = moCommand.Execute(mlngRecordsAffected)
+			Execute = New Recordset
+			Execute.Obj = moCommand.Obj.Execute(mlngRecordsAffected)
 			If moCommand.LastErr <> "" Then Throw New Exception(moCommand.LastErr)
 			Me.ClearErr()
 		Catch ex As Exception
@@ -101,7 +103,7 @@ Public Class CmdSQLSrvText
 	Public Property ParaValue(ParaName As String) As Object
 		Get
 			Try
-				ParaValue = moCommand.Parameters.Obj(ParaName).Value
+				ParaValue = moCommand.Obj.Parameters(ParaName).Value
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ParaValue.Get", ex)
@@ -110,7 +112,7 @@ Public Class CmdSQLSrvText
 		End Get
 		Set(value As Object)
 			Try
-				moCommand.Parameters.Obj(ParaName).Value = value
+				moCommand.Obj.Parameters(ParaName).Value = value
 				Me.ClearErr()
 			Catch ex As Exception
 				Me.SetSubErrInf("ParaValue.Set", ex)

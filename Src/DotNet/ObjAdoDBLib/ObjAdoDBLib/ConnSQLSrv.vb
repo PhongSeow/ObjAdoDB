@@ -4,15 +4,16 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Connection for SQL Server
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.4
+'* Version: 1.0.5
 '* Create Time: 2/5/2021
 '* 1.0.2	18/4/2021	Modify OpenOrKeepActive
 '* 1.0.3	6/5/2021	Modify CommandTimeout, add IsDBConnReady
 '* 1.0.4	16/5/2021	Add SQLSrvDataTypeEnum, Modify OpenOrKeepActive
+'* 1.0.5	18/5/2021	Modify ConnStatus,OpenOrKeepActive
 '**********************************
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.4"
+	Private Const CLS_VERSION As String = "1.0.5"
 	Public Connection As Connection
 
 	Public Enum SQLSrvDataTypeEnum
@@ -224,13 +225,13 @@ Public Class ConnSQLSrv
 	''' <summary>
 	''' Database connection status, including the connection between principal and mirror server.
 	''' </summary>
-	Private moConnStatus As ConnStatusEnum = ConnStatusEnum.Unknow
+	Private mintConnStatus As ConnStatusEnum = ConnStatusEnum.Unknow
 	Public Property ConnStatus() As ConnStatusEnum
 		Get
-			Return moConnStatus
+			Return mintConnStatus
 		End Get
 		Friend Set(ByVal value As ConnStatusEnum)
-			moConnStatus = value
+			mintConnStatus = value
 		End Set
 	End Property
 
@@ -283,6 +284,7 @@ Public Class ConnSQLSrv
 								strStepName = "Open"
 								.Open()
 								If .LastErr <> "" Then Throw New Exception(.LastErr)
+								Me.ConnStatus = ConnStatusEnum.PrincipalOnline
 						End Select
 					Case RunModeEnum.Mirror
 						Throw New Exception("Not support now")
