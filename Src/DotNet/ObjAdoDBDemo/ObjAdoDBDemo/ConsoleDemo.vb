@@ -36,7 +36,8 @@ Public Class ConsoleDemo
             Console.WriteLine("Press G to Recordset.NextRecordset")
             Console.WriteLine("Press H to Test Command")
             Console.WriteLine("Press I to Test JSon")
-            Console.WriteLine("Press J to Execute StoredProcedure")
+            Console.WriteLine("Press J to Execute SQL Server StoredProcedure")
+            Console.WriteLine("Press K to Execute SQL Server SQL statement Text")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -79,7 +80,7 @@ Public Class ConsoleDemo
                                     Case "Y", "y", ""
                                         Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.CurrDB, Me.ProviderSQLSrv)
                                     Case Else
-                                        Console.WriteLine("Input DB User:" & Me.CurrDB)
+                                        Console.WriteLine("Input DB User:" & Me.DBUser)
                                         Me.DBUser = Console.ReadLine()
                                         If Me.DBUser = "" Then Me.DBUser = "sa"
                                         Console.WriteLine("DB User=" & Me.DBUser)
@@ -132,6 +133,8 @@ Public Class ConsoleDemo
                         Case Connection.DBTypeEnum.SQLServer
                             Console.WriteLine("ConnectionString=" & Me.ConnSQLSrv.Connection.ConnectionString)
                             Console.WriteLine("State=" & Me.ConnSQLSrv.Connection.State)
+                            Console.WriteLine("ConnStatus=" & Me.ConnSQLSrv.ConnStatus)
+                            Console.WriteLine("IsDBConnReady=" & Me.ConnSQLSrv.IsDBConnReady)
                         Case Else
                             Console.WriteLine("ConnectionString=" & Me.Conn.ConnectionString)
                             Console.WriteLine("State=" & Me.Conn.State)
@@ -222,12 +225,13 @@ Public Class ConsoleDemo
                     Dim oCommand As New Command
                     With oCommand
                         Console.WriteLine("Set ActiveConnection")
-                        .ActiveConnection = Me.Conn
-                        Console.WriteLine("CommandText=""sp_helpdb""")
-                        .CommandText = "sp_helpdb"
+                        .ActiveConnection = Me.ConnSQLSrv.Connection
+                        Console.WriteLine("CommandText=""select * from master.dbo.sysdatabases where name = ?")
+                        .CommandText = "select * from master.dbo.sysdatabases where name = ?"
                         Console.WriteLine("CreateParameter @dbname=""master""")
                         .Parameters.Append(.CreateParameter("@dbname", Field.DataTypeEnum.adVarChar, Parameter.ParameterDirectionEnum.adParamInput, 128, "master"))
                         .Parameters.Item("@dbname").Value = "WxWorkDB"
+                        Console.WriteLine("Parameters.Item(@dbname).Value=" & .Parameters.Item("@dbname").Value)
                         If .LastErr <> "" Then
                             Console.WriteLine(.LastErr)
                         Else
@@ -280,8 +284,9 @@ Public Class ConsoleDemo
                     Dim oCmdSQLSrvSp As New CmdSQLSrvSp("sp_helpdb")
                     With oCmdSQLSrvSp
                         .ActiveConnection = Me.ConnSQLSrv.Connection
-                        .AddPara("@dbname", CmdSQLSrvSp.SQLSrvDataTypeEnum.adNVarchar, 128)
+                        .AddPara("@dbname", ConnSQLSrv.SQLSrvDataTypeEnum.adNVarchar, 128)
                         .ParaValue("@dbname") = "master"
+                        Console.WriteLine("ParaValue(@dbname)=" & .ParaValue("@dbname"))
                         Console.WriteLine("Execute")
                         Dim rsAny = .Execute()
                         If .LastErr <> "" Then
@@ -290,6 +295,36 @@ Public Class ConsoleDemo
                             Console.WriteLine("OK")
                             Console.WriteLine("RecordsAffected=" & .RecordsAffected)
                             Console.WriteLine("ReturnValue=" & .ReturnValue)
+                            With rsAny
+                                Console.WriteLine("Fields.Count=" & .Fields.Count)
+                                If .Fields.Count > 0 Then
+                                    Dim i As Integer
+                                    For i = 0 To .Fields.Count - 1
+                                        Console.WriteLine(".Fields.Item(" & i & ").Name=" & .Fields.Item(i).Name & "[" & .Fields.Item(i).Value.ToString & "]")
+                                    Next
+                                End If
+                                Console.WriteLine("PageCount=" & .PageCount)
+                                Console.WriteLine("EOF=" & .EOF)
+                            End With
+                        End If
+                    End With
+                Case ConsoleKey.K
+                    Console.WriteLine("*******************")
+                    Console.WriteLine("Execute SQL Server SQL statement Text")
+                    Console.WriteLine("*******************")
+                    Dim oCmdSQLSrvText As New CmdSQLSrvText("select * from master.dbo.sysdatabases where name = ?")
+                    With oCmdSQLSrvText
+                        .ActiveConnection = Me.ConnSQLSrv.Connection
+                        .AddPara("@name", ConnSQLSrv.SQLSrvDataTypeEnum.adVarChar, 128)
+                        .ParaValue("@name") = "master"
+                        Console.WriteLine("ParaValue(@name)=" & .ParaValue("@name"))
+                        Console.WriteLine("Execute")
+                        Dim rsAny = .Execute()
+                        If .LastErr <> "" Then
+                            Console.WriteLine(.LastErr)
+                        Else
+                            Console.WriteLine("OK")
+                            Console.WriteLine("RecordsAffected=" & .RecordsAffected)
                             With rsAny
                                 Console.WriteLine("Fields.Count=" & .Fields.Count)
                                 If .Fields.Count > 0 Then
