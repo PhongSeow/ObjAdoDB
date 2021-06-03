@@ -12,9 +12,9 @@
 	  <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
 	  <RepositoryType>GIT</RepositoryType>
 	  <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBDemo</RepositoryUrl>
-	  <Version>1.0.11.3</Version>
+	  <Version>1.0.13.1</Version>
 	  <PackageTags>ObjAdoDBLib Ado AdoDB VB6 ASP</PackageTags>
-	  <PackageReleaseNotes>Add the example to use the SQL Server StoredProcedure and SQL statement Text.</PackageReleaseNotes>
+	  <PackageReleaseNotes>Add the example to use AllRecordset2JSon.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ObjAdoDBLib" Version="1.0.16.5" />
+    <PackageReference Include="ObjAdoDBLib" Version="1.1.0.18" />
   </ItemGroup>
 
 </Project>

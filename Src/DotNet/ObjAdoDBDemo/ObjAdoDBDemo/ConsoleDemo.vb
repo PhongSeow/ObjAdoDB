@@ -264,6 +264,7 @@ Public Class ConsoleDemo
                     Console.WriteLine("Press Q to Up")
                     Console.WriteLine("Press A to Convert current row to JSON")
                     Console.WriteLine("Press B to Convert current recordset to JSON")
+                    Console.WriteLine("Press C to Convert all recordset to JSON")
                     Do While True
                         Me.CurrConsoleKey = Console.ReadKey().Key
                         Select Case Me.CurrConsoleKey
@@ -271,9 +272,15 @@ Public Class ConsoleDemo
                                 Exit Do
                             Case ConsoleKey.A
                                 Console.WriteLine(Me.RS.Row2JSon)
+                                If Me.RS.LastErr <> "" Then Console.WriteLine(Me.RS.LastErr)
                                 Exit Do
                             Case ConsoleKey.B
                                 Console.WriteLine(Me.RS.Recordset2JSon(10))
+                                If Me.RS.LastErr <> "" Then Console.WriteLine(Me.RS.LastErr)
+                                Exit Do
+                            Case ConsoleKey.C
+                                Console.WriteLine(Me.RS.AllRecordset2JSon())
+                                If Me.RS.LastErr <> "" Then Console.WriteLine(Me.RS.LastErr)
                                 Exit Do
                         End Select
                     Loop
