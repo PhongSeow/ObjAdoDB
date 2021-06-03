@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Recordset
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.9
+'* Version: 1.0.12
 '* Create Time: 18/2/2021
 '* 1.0.2  20/2/2021   Modify Fields
 '* 1.0.3  11/3/2021   Modify NextRecordset
@@ -14,10 +14,13 @@
 '* 1.0.7  27/3/2021   Modify mRs2JSonTypeEnum,Row2JSon
 '* 1.0.8  4/4/2021   Remove mRecordset2JSon, Add Recordset2JSon
 '* 1.0.9  16/4/2021	Remove excess Me.ClearErr()
+'* 1.0.10  1/6/2021	Add AllRecordset2JSon
+'* 1.0.11  2/6/2021	Modify AllRecordset2JSon
+'* 1.0.12  3/6/2021	Modify Recordset2JSon,AllRecordset2JSon,NextRecordset
 '**********************************
 Public Class Recordset
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.9"
+	Private Const CLS_VERSION As String = "1.0.12"
 	Public Obj As Object
 	Private moPigJSon As PigJSon
 	Public Sub New()
@@ -129,6 +132,16 @@ Public Class Recordset
 			mlngMaxToJSonRows = value
 		End Set
 	End Property
+
+	'''' <summary>
+	'''' Has Next Recordset
+	'''' </summary>
+	'Private mbolHasNextRecordset As Boolean
+	'Public ReadOnly Property HasNextRecordset() As Boolean
+	'	Get
+	'		Return mbolHasNextRecordset
+	'	End Get
+	'End Property
 
 	Public Property AbsolutePage() As PositionEnum
 		Get
@@ -590,7 +603,7 @@ Public Class Recordset
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("NextRecordset", ex)
-			Return Me
+			Return Nothing
 		End Try
 	End Function
 	Public Sub Open(Optional Source As String = "", Optional ActiveConnection As String = "", Optional CursorType As CursorTypeEnum = CursorTypeEnum.adOpenForwardOnly, Optional LockType As LockTypeEnum = LockTypeEnum.adLockReadOnly, Optional Options As Long = -1)
@@ -809,6 +822,51 @@ Public Class Recordset
 	End Function
 
 	''' <summary>
+	''' Convert all recordset to JSON|所有结果集转换成JSON
+	''' </summary>
+	''' <returns></returns>
+	Public Function AllRecordset2JSon() As String
+		Dim strStepName As String = ""
+		Try
+			Dim intRSNo As Integer = 0
+			strStepName = "New PigJSon"
+			Dim pjMain As New PigJSon
+			If pjMain.LastErr <> "" Then Throw New Exception(pjMain.LastErr)
+			pjMain.AddArrayEleBegin("RS", True)
+			Dim strRsJSon As String
+			strStepName = "Me.Recordset2JSon"
+			strRsJSon = Me.Recordset2JSon(Me.MaxToJSonRows)
+			If Me.LastErr <> "" Then Throw New Exception(Me.LastErr)
+			pjMain.AddArrayEleValue(strRsJSon, True)
+			intRSNo = 1
+			strStepName = "Me.NextRecordset"
+			Dim rsParent As Recordset = Nothing
+			Dim rsSub As Recordset = Me.NextRecordset
+			Do While Not rsSub Is Nothing
+				strStepName = "rs.Recordset2JSon"
+				strRsJSon = rsSub.Recordset2JSon(Me.MaxToJSonRows)
+				If rsSub.LastErr <> "" Then Throw New Exception(rsSub.LastErr)
+				pjMain.AddArrayEleValue(strRsJSon)
+				intRSNo += 1
+				rsParent = rsSub
+				strStepName = "rs.NextRecordset"
+				rsSub = Nothing
+				rsSub = rsParent.NextRecordset
+				If rsParent.LastErr <> "" Then Exit Do
+			Loop
+			pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+			pjMain.AddEle("TotalRS", intRSNo)
+			pjMain.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+			AllRecordset2JSon = pjMain.MainJSonStr
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("AllRecordset2JSon", ex)
+			Return ""
+		End Try
+	End Function
+
+
+	''' <summary>
 	''' Convert current recordset to JSON|当前结果集转换成JSON
 	''' </summary>
 	''' <param name="TopRows">Top rows|最前行数</param>
@@ -837,7 +895,8 @@ Public Class Recordset
 				Me.MoveNext()
 				If Me.LastErr <> "" Then Throw New Exception(Me.LastErr)
 			Loop
-			If intRowNo > 0 Then pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+			'			If intRowNo > 0 Then pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+			pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
 			pjMain.AddEle("TotalRows", intRowNo)
 			pjMain.AddEle("IsEOF", Me.EOF)
 			pjMain.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
