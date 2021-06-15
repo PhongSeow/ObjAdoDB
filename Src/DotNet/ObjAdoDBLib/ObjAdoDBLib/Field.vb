@@ -4,17 +4,18 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Fields
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.6
+'* Version: 1.0.7
 '* Create Time: 21/2/2021
 '* 1.0.2  19/3/2021   Add BooleanValue,DateValue,DecValue,IntValue,LngValue,StrValue,DataCategory
 '* 1.0.3  20/3/2021   Modify DecValue, add ValueForJSon
 '* 1.0.4  27/3/2021   Modify StrValue,LngValue
 '* 1.0.5  4/4/2021   Modify IntValue, add mSrc2JSonStr,mLng2Date,IsGetValueErrRetNothing,DateValue
 '* 1.0.6  16/4/2021	Remove excess Me.ClearErr()
+'* 1.0.7  5/6/2021	Modify DataCategory
 '**********************************
 Public Class Field
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.6"
+	Private Const CLS_VERSION As String = "1.0.7"
 	Public Obj As Object
 
 	Public Enum DataCategoryEnum
@@ -158,8 +159,10 @@ Public Class Field
 						DataCategory = DataCategoryEnum.StrValue
 					Case DataTypeEnum.adBigInt, DataTypeEnum.adTinyInt, DataTypeEnum.adSmallInt, DataTypeEnum.adUnsignedBigInt, DataTypeEnum.adUnsignedInt, DataTypeEnum.adUnsignedSmallInt, DataTypeEnum.adUnsignedTinyInt, DataTypeEnum.adInteger
 						DataCategory = DataCategoryEnum.IntValue
-					Case DataTypeEnum.adChar, DataTypeEnum.adVarChar, DataTypeEnum.adWChar, DataTypeEnum.adVarWChar, DataTypeEnum.adLongVarChar, DataTypeEnum.adLongVarWChar, DataTypeEnum.adGUID
+					Case DataTypeEnum.adDecimal, DataTypeEnum.adDouble, DataTypeEnum.adCurrency, DataTypeEnum.adNumeric, DataTypeEnum.adVarNumeric
 						DataCategory = DataCategoryEnum.DecValue
+					Case DataTypeEnum.adDate, DataTypeEnum.adDate, DataTypeEnum.adDBTime, DataTypeEnum.adFileTime, DataTypeEnum.adDBTimeStamp
+						DataCategory = DataCategoryEnum.DateValue
 					Case Else
 						DataCategory = DataCategoryEnum.OtherValue
 				End Select
