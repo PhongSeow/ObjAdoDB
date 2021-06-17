@@ -13,10 +13,11 @@
 '* 1.0.6	12/6/2021	Modify OpenOrKeepActive and add New for Mirror
 '* 1.0.8	14/6/2021	Add RefMirrSrvTime,LastRefMirrSrvTime
 '* 1.0.9	15/6/2021	Modify OpenOrKeepActive,mIsDBOnline
+'* 1.0.10	16/6/2021	Modify OpenOrKeepActive
 '**********************************
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.9"
+	Private Const CLS_VERSION As String = "1.0.10"
 	Public Connection As Connection
 	Private mcstChkDBStatus As CmdSQLSrvText
 
@@ -465,6 +466,7 @@ Public Class ConnSQLSrv
 								strStepName = "Open3"
 								.Open()
 								If .LastErr = "" Then
+									strStepName = "mIsDBOnline"
 									If Me.mIsDBOnline = True Then
 										If Me.mLastConnSQLServer = Me.PrincipalSQLServer Then
 											Me.ConnStatus = ConnStatusEnum.PrincipalOnline
@@ -474,9 +476,11 @@ Public Class ConnSQLSrv
 										Me.LastRefMirrSrvTime = Now
 									Else
 										Me.ConnStatus = ConnStatusEnum.Offline
+										Throw New Exception(.LastErr)
 									End If
 								Else
 									Me.ConnStatus = ConnStatusEnum.Offline
+									Throw New Exception(.LastErr)
 								End If
 							End With
 						End If
@@ -487,7 +491,7 @@ Public Class ConnSQLSrv
 			Me.ClearErr()
 		Catch ex As Exception
 			Me.SetSubErrInf("OpenOrKeepActive", strStepName, ex)
-			Me.ConnStatus = ConnStatusEnum.Unknow
+			If Me.ConnStatus <> ConnStatusEnum.Offline Then Me.ConnStatus = ConnStatusEnum.Unknow
 		End Try
 	End Sub
 

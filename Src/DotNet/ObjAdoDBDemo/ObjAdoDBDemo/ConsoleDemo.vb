@@ -8,6 +8,7 @@ Public Class ConsoleDemo
     Public SQL As String
     Public RS As Recordset
     Public DBSrv As String = "localhost"
+    Public MirrDBSrv As String = "localhost"
     Public DBUser As String = "sa"
     Public DBPwd As String = ""
     Public CurrDB As String = "master"
@@ -48,7 +49,8 @@ Public Class ConsoleDemo
                     Console.WriteLine("*******************")
                     Console.WriteLine("Press Q to Up")
                     Console.WriteLine("Press A to SQL Server")
-                    Console.WriteLine("Press B to Access")
+                    Console.WriteLine("Press B to SQL Server(Mirror mode)")
+                    Console.WriteLine("Press C to Access")
                     Do While True
                         Me.CurrConsoleKey = Console.ReadKey().Key
                         Select Case Me.CurrConsoleKey
@@ -91,6 +93,46 @@ Public Class ConsoleDemo
                                 End Select
                                 Exit Do
                             Case ConsoleKey.B
+                                Me.DBType = Connection.DBTypeEnum.SQLServer
+                                Console.WriteLine("Is Use Microsoft SQL Server OLEDB ? (Y/n)")
+                                Me.InpStr = Console.ReadLine()
+                                Select Case Me.InpStr
+                                    Case "Y", "y", ""
+                                        Me.ProviderSQLSrv = ConnSQLSrv.SQLSrvProviderEnum.MicrosoftSQLServer
+                                        Console.WriteLine("ProviderSQLSrv=MicrosoftSQLServer")
+                                    Case Else
+                                        Me.ProviderSQLSrv = ConnSQLSrv.SQLSrvProviderEnum.MicrosoftSQLServer2012NativeClient
+                                        Console.WriteLine("ProviderSQLSrv=MicrosoftSQLServer2012NativeClient")
+                                End Select
+                                Console.WriteLine("Input Principal SQLServer:" & Me.DBSrv)
+                                Me.DBSrv = Console.ReadLine()
+                                If Me.DBSrv = "" Then Me.DBSrv = "localhost"
+                                Console.WriteLine("Principal SQLServer=" & Me.DBSrv)
+                                Console.WriteLine("Input Mirror SQLServer:" & Me.MirrDBSrv)
+                                Me.MirrDBSrv = Console.ReadLine()
+                                If Me.MirrDBSrv = "" Then Me.MirrDBSrv = "localhost"
+                                Console.WriteLine("MirrorSQLServer SQLServer=" & Me.MirrDBSrv)
+                                Console.WriteLine("Input Default DB:" & Me.CurrDB)
+                                Me.CurrDB = Console.ReadLine()
+                                If Me.CurrDB = "" Then Me.CurrDB = "master"
+                                Console.WriteLine("Default DB=" & Me.CurrDB)
+                                Console.WriteLine("Is Trusted Connection ? (Y/n)")
+                                Me.InpStr = Console.ReadLine()
+                                Select Case Me.InpStr
+                                    Case "Y", "y", ""
+                                        Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.MirrDBSrv, Me.CurrDB, Me.ProviderSQLSrv)
+                                    Case Else
+                                        Console.WriteLine("Input DB User:" & Me.DBUser)
+                                        Me.DBUser = Console.ReadLine()
+                                        If Me.DBUser = "" Then Me.DBUser = "sa"
+                                        Console.WriteLine("DB User=" & Me.DBUser)
+                                        Console.WriteLine("Input DB Password:")
+                                        Me.DBPwd = Console.ReadLine()
+                                        Console.WriteLine("DB Password=" & Me.DBPwd)
+                                        Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.MirrDBSrv, Me.CurrDB, Me.DBUser, Me.DBPwd, Me.ProviderSQLSrv)
+                                End Select
+                                Exit Do
+                            Case ConsoleKey.C
                                 Me.DBType = Connection.DBTypeEnum.Access
                                 Console.WriteLine("Input Access File Path:" & Me.AccessFilePath)
                                 Me.AccessFilePath = Console.ReadLine()
