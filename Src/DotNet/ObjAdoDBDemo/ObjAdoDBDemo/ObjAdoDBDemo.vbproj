@@ -12,9 +12,9 @@
 	  <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
 	  <RepositoryType>GIT</RepositoryType>
 	  <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBDemo</RepositoryUrl>
-	  <Version>1.0.14.2</Version>
+	  <Version>1.0.14.6</Version>
 	  <PackageTags>ObjAdoDBLib Ado AdoDB VB6 ASP</PackageTags>
-	  <PackageReleaseNotes>Add the example for SQL Server run on Mirror mode.</PackageReleaseNotes>
+	  <PackageReleaseNotes>Add the example for SQL Server run on Mirror mode and automatic switch of high availability.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ObjAdoDBLib" Version="1.1.1.8" />
+    <PackageReference Include="ObjAdoDBLib" Version="1.1.1.15" />
   </ItemGroup>
 
 </Project>
