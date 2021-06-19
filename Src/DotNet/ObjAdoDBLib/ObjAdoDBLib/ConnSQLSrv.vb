@@ -424,7 +424,7 @@ Public Class ConnSQLSrv
 						End If
 						Me.Connection = New Connection
 						With Me.Connection
-							strStepName = "SetConnSQLServer2"
+							strStepName = "SetConnSQLServer first time"
 							If Me.IsTrustedConnection = True Then
 								.SetConnSQLServer(Me.mLastConnSQLServer, Me.CurrDatabase, Me.Provider)
 							Else
@@ -433,7 +433,7 @@ Public Class ConnSQLSrv
 							If .LastErr <> "" Then Throw New Exception(.LastErr)
 							.ConnectionTimeout = Me.ConnectionTimeout
 							.CommandTimeout = Me.CommandTimeout
-							strStepName = "Open2"
+							strStepName = "Open first time"
 							.Open()
 							If .LastErr = "" Then
 								If Me.mIsDBOnline = True Then
@@ -454,7 +454,7 @@ Public Class ConnSQLSrv
 								Me.mLastConnSQLServer = Me.MirrorSQLServer
 							End If
 							With Me.Connection
-								strStepName = "SetConnSQLServer3"
+								strStepName = "SetConnSQLServer second time"
 								If Me.IsTrustedConnection = True Then
 									.SetConnSQLServer(Me.mLastConnSQLServer, Me.CurrDatabase, Me.Provider)
 								Else
@@ -463,10 +463,10 @@ Public Class ConnSQLSrv
 								If .LastErr <> "" Then Throw New Exception(.LastErr)
 								.ConnectionTimeout = Me.ConnectionTimeout
 								.CommandTimeout = Me.CommandTimeout
-								strStepName = "Open3"
+								strStepName = "Open second time"
 								.Open()
 								If .LastErr = "" Then
-									strStepName = "mIsDBOnline"
+									strStepName = "mIsDBOnline second time"
 									If Me.mIsDBOnline = True Then
 										If Me.mLastConnSQLServer = Me.PrincipalSQLServer Then
 											Me.ConnStatus = ConnStatusEnum.PrincipalOnline
