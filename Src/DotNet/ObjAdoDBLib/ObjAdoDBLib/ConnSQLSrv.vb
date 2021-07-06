@@ -141,6 +141,7 @@ Public Class ConnSQLSrv
 			rsAny = mcstChkDBStatus.Execute
 			If mcstChkDBStatus.LastErr <> "" Then Throw New Exception(mcstChkDBStatus.LastErr)
 			Dim strDBStaus As String = UCase(rsAny.Fields.Item("DBStatus").StrValue)
+			rsAny.Close()
 			rsAny = Nothing
 			If strDBStaus = "ONLINE" Then
 				Return True
