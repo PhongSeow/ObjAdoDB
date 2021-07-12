@@ -2,7 +2,7 @@
 VB.net
 Module Program
     Sub Main(args As String())
-        Dim oConsoleDemo As New ObjAdoDBLib.ConsoleDemo
+        Dim oConsoleDemo As New ObjAdoDBLibDemo.ConsoleDemo
         oConsoleDemo.Main()
     End Sub
 End Module
@@ -12,7 +12,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        ObjAdoDBLib.ConsoleDemo oConsoleDemo = new ObjAdoDBLib.ConsoleDemo() ;
+        ObjAdoDBLibDemo.ConsoleDemo oConsoleDemo = new ObjAdoDBLibDemo.ConsoleDemo() ;
         oConsoleDemo.Main();
     }
 }
