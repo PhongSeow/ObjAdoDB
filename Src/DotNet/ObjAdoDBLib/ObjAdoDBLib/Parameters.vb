@@ -15,6 +15,7 @@ Public Class Parameters
 	Inherits PigBaseMini
 	Private Const CLS_VERSION As String = "1.0.5"
 	Public Obj As Object
+
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
 		Try
@@ -86,4 +87,5 @@ Public Class Parameters
 			Me.SetSubErrInf("Refresh", ex)
 		End Try
 	End Sub
+
 End Class

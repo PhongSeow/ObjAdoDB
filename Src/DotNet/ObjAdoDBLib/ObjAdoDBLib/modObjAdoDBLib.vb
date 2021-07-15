@@ -64,4 +64,13 @@
 		End Select
 	End Function
 
+	Public Function SQLStr(strValue As String, Optional IsNotNull As Boolean = False) As String
+		strValue = Replace(strValue, "'", "''")
+		If UCase(strValue) = "NULL" And IsNotNull = False Then
+			SQLStr = "NULL"
+		Else
+			SQLStr = "'" & strValue & "'"
+		End If
+	End Function
+
 End Module
