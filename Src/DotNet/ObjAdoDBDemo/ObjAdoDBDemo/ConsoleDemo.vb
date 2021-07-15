@@ -356,6 +356,7 @@ Public Class ConsoleDemo
                                 Console.WriteLine("EOF=" & .EOF)
                             End With
                         End If
+                        Console.WriteLine("DebugStr=" & .DebugStr)
                     End With
                 Case ConsoleKey.K
                     Console.WriteLine("*******************")
@@ -386,6 +387,7 @@ Public Class ConsoleDemo
                                 Console.WriteLine("EOF=" & .EOF)
                             End With
                         End If
+                        Console.WriteLine("DebugStr=" & .DebugStr)
                     End With
             End Select
         Loop
