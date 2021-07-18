@@ -3,7 +3,7 @@
 '* Author: Seow Phong
 '* Describe: Simple JSON class, which can assemble and parse JSON definitions without components.
 '* Home Url: http://www.seowphong.com
-'* Version: 1.0.12
+'* Version: 1.0.13
 '* Create Time: 8/8/2019
 '* 1.0.2    10/8/2020   Code changed from VB6 to VB.NET
 '* 1.0.3    12/8/2020   Some Function debugging 
@@ -16,11 +16,12 @@
 '* 1.0.10   10/3/2020   Use PigBaseMini，and add IsGetValueErrRetNothing
 '* 1.0.11   4/4/2021   Modify AddArrayEleBegin,mSrc2JSonStr,mJSonStr2Src,mLng2Date
 '* 1.0.12   4/4/2021   Modify mDate2Lng,mLng2Date
+'* 1.0.13   4/4/2021   Modify AddEle
 '*******************************************************
 Imports System.Text
 Public Class PigJSon
     Inherits PigBaseMini
-    Private Const CLS_VERSION As String = "1.0.12"
+    Private Const CLS_VERSION As String = "1.0.13"
 
     ''' <summary>The type of the JSON element</summary>
     Public Enum xpJSonEleType
@@ -138,7 +139,7 @@ Public Class PigJSon
     Public Overloads Sub AddEle(EleKey As String, IntValue As Long, Optional IsFirstEle As Boolean = False)
         Try
             Dim strRet As String = Me.mAddEle(EleKey, IntValue.ToString, IsFirstEle, False)
-            If strRet <> "" Then Err.Raise(-1, , strRet)
+            If strRet <> "OK" Then Err.Raise(-1, , strRet)
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("AddEle.IntValue", ex)
@@ -152,7 +153,7 @@ Public Class PigJSon
     Public Overloads Sub AddEle(EleKey As String, StrValue As String, Optional IsFirstEle As Boolean = False)
         Try
             Dim strRet As String = Me.mAddEle(EleKey, StrValue, IsFirstEle, True)
-            If strRet <> "" Then Err.Raise(-1, , strRet)
+            If strRet <> "OK" Then Err.Raise(-1, , strRet)
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("AddEle.StrValue", ex)
@@ -167,7 +168,7 @@ Public Class PigJSon
     Public Overloads Sub AddEle(EleKey As String, BoolValue As Boolean, Optional IsFirstEle As Boolean = False)
         Try
             Dim strRet = Me.mAddEle(EleKey, BoolValue.ToString, IsFirstEle, False)
-            If strRet <> "" Then Err.Raise(-1, , strRet)
+            If strRet <> "OK" Then Err.Raise(-1, , strRet)
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("AddEle.BoolValue", ex)
@@ -181,7 +182,7 @@ Public Class PigJSon
     Public Overloads Sub AddEle(EleKey As String, DecValue As Decimal, Optional IsFirstEle As Boolean = False)
         Try
             Dim strRet = Me.mAddEle(EleKey, DecValue.ToString, IsFirstEle, False)
-            If strRet <> "" Then Err.Raise(-1, , strRet)
+            If strRet <> "OK" Then Err.Raise(-1, , strRet)
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("AddEle.DateValue", ex)
@@ -197,7 +198,7 @@ Public Class PigJSon
             Dim lngDate As Long = Me.mDate2Lng(DateValue)
             If Me.LastErr <> "" Then Err.Raise(-1, , Me.LastErr)
             Dim strRet = Me.mAddEle(EleKey, lngDate.ToString, IsFirstEle, False)
-            If strRet <> "" Then Err.Raise(-1, , strRet)
+            If strRet <> "OK" Then Err.Raise(-1, , strRet)
             Me.ClearErr()
         Catch ex As Exception
             Me.SetSubErrInf("AddEle.DateValue", ex)

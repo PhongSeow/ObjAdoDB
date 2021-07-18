@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Mapping VB6 ADODB.Recordset
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.12
+'* Version: 1.0.13
 '* Create Time: 18/2/2021
 '* 1.0.2  20/2/2021   Modify Fields
 '* 1.0.3  11/3/2021   Modify NextRecordset
@@ -17,14 +17,17 @@
 '* 1.0.10  1/6/2021	Add AllRecordset2JSon
 '* 1.0.11  2/6/2021	Modify AllRecordset2JSon
 '* 1.0.12  3/6/2021	Modify Recordset2JSon,AllRecordset2JSon,NextRecordset
+'* 1.0.13  16/7/2021	Modify EOF, add ColNameList,mGetStr
 '**********************************
 Public Class Recordset
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.12"
+	Private Const CLS_VERSION As String = "1.0.13"
 	Public Obj As Object
 	Private moPigJSon As PigJSon
+	Private mstrColNameList As String
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
+		mstrColNameList = ""
 	End Sub
 	Private Enum mRs2JSonTypeEnum
 		CurrRecordsetTopRows = 10
@@ -408,7 +411,7 @@ Public Class Recordset
 				Return Me.Obj.EOF
 			Catch ex As Exception
 				Me.SetSubErrInf("EOF.Get", ex)
-				Return Nothing
+				Return True
 			End Try
 		End Get
 	End Property
@@ -789,26 +792,76 @@ Public Class Recordset
 		End Try
 	End Sub
 
+	Public Function ColNameList() As String
+		Try
+			If mstrColNameList = "" Then
+				If Me.EOF = False Then
+					Dim i As Integer
+					mstrColNameList = ""
+					For i = 0 To Me.Fields.Count - 1
+						Dim oField As Field = Me.Fields.Item(i)
+						mstrColNameList &= "<" & oField.Name & ">"
+					Next
+
+				End If
+			End If
+			Return mstrColNameList
+		Catch ex As Exception
+			Me.SetSubErrInf("ColNameList", ex)
+			Return ""
+		End Try
+	End Function
+
 	''' <summary>
 	''' Convert current row to JSON|当前行转换成JSON
 	''' </summary>
 	Public Function Row2JSon() As String
+		Const SUB_NAME As String = "Row2JSon"
+		Dim strStepName As String = ""
 		Try
 			Dim pjMain As New PigJSon
 			With pjMain
+				strStepName = "Chk EOF"
 				If Me.EOF = False Then
-					For i = 0 To Me.Fields.Count - 1
-						Dim oField As Field = Me.Fields.Item(i)
+					Dim strColNameList As String = Me.ColNameList
+					Dim strColName As String = ""
+					Dim i As Integer = 0
+					Do While True
+						strColName = Me.mGetStr(strColNameList, "<", ">")
+						If strColName = "" Then Exit Do
+						strStepName = "Fields(" & strColName & ")"
+						Dim oField As Field = Me.Fields.Item(strColName)
 						Dim strName As String = oField.Name
 						Dim strValue As String = oField.ValueForJSon
 						If strName = "" Then strName = "Col" & (i + 1).ToString
 						If Me.IsTrimJSonValue = True Then strValue = Trim(strValue)
+						strStepName = "AddSymbol(" & strName & ")"
+						Me.PrintDebugLog(SUB_NAME, strStepName, strValue, True)
 						If i = 0 Then
 							.AddEle(strName, strValue, True)
 						Else
 							.AddEle(strName, strValue)
 						End If
-					Next
+						i += 1
+					Loop
+
+					'For i = 0 To Me.Fields.Count - 1
+					'	strStepName = "Fields(" & i & ")"
+					'	Dim oField As New Field
+					'	oField.Obj = Me.Obj.Fields(i)
+					'	Dim strName As String = oField.Name
+					'	Dim strValue As String = oField.ValueForJSon
+					'	If strName = "" Then strName = "Col" & (i + 1).ToString
+					'	If Me.IsTrimJSonValue = True Then strValue = Trim(strValue)
+					'	strStepName = "AddSymbol(" & strName & ")"
+					'	Me.PrintDebugLog(SUB_NAME, strStepName, strValue, True)
+					'	If i = 0 Then
+					'		.AddEle(strName, strValue, True)
+					'	Else
+					'		.AddEle(strName, strValue)
+					'	End If
+					'Next
+					strStepName = "AddSymbol"
 					.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
 				End If
 			End With
@@ -816,8 +869,37 @@ Public Class Recordset
 			pjMain = Nothing
 			Me.ClearErr()
 		Catch ex As Exception
-			Me.SetSubErrInf("Row2JSon", ex)
+			Me.SetSubErrInf(SUB_NAME, strStepName, ex)
 			Return ""
+		End Try
+	End Function
+
+	Private Function mGetStr(ByRef SourceStr As String, strBegin As String, strEnd As String, Optional IsCut As Boolean = True) As String
+		Dim lngBegin As Long
+		Dim lngEnd As Long
+		Dim lngBeginLen As Long
+		Dim lngEndLen As Long
+		Try
+			lngBeginLen = Len(strBegin)
+			lngBegin = InStr(SourceStr, strBegin, CompareMethod.Text)
+			lngEndLen = Len(strEnd)
+			If lngEndLen = 0 Then
+				lngEnd = Len(SourceStr) + 1
+			Else
+				lngEnd = InStr(lngBegin + lngBeginLen + 1, SourceStr, strEnd, CompareMethod.Text)
+				If lngBegin = 0 Then Err.Raise(-1, , "lngBegin=0")
+			End If
+			If lngEnd <= lngBegin Then Err.Raise(-1, , "lngEnd <= lngBegin")
+			If lngBegin = 0 Then Err.Raise(-1, , "lngBegin=0[2]")
+
+			mGetStr = Mid(SourceStr, lngBegin + lngBeginLen, (lngEnd - lngBegin - lngBeginLen))
+			If IsCut = True Then
+				SourceStr = Left(SourceStr, lngBegin - 1) & Mid(SourceStr, lngEnd + lngEndLen)
+			End If
+			Me.ClearErr()
+		Catch ex As Exception
+			mGetStr = ""
+			Me.SetSubErrInf("mGetStr", ex)
 		End Try
 	End Function
 

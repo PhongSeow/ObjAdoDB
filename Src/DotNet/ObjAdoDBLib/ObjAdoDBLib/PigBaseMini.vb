@@ -29,7 +29,7 @@
 '*1.0.22 6/7/2021    Modify New 
 '*1.0.23 9/7/2021    Modify New for fix bugs that identify Windows and Linux operating system types.
 '*1.0.24 14/7/2021   Modify mPrintDebugLog
-'*1.0.25 15/7/2021   Modify mPrintDebugLog,PrintDebugLog
+'*1.0.25 15/7/2021   Modify mPrintDebugLog,PrintDebugLog,mGetSubErrInf
 '************************************
 Imports System.Runtime.InteropServices
 Public Class PigBaseMini
@@ -114,11 +114,20 @@ Public Class PigBaseMini
             Dim sfAny As New System.IO.FileStream(Me.mstrDebugFilePath, System.IO.FileMode.Append, System.IO.FileAccess.Write, System.IO.FileShare.Write, 10240, False)
             Dim swAny = New System.IO.StreamWriter(sfAny)
             Dim dtNow As System.DateTime = System.DateTime.Now
-            Dim strLogInf As String = "DebugInf[" & Me.MyClassName & "." & SubName
-            If StepName <> "" Then
-                strLogInf &= "." & StepName
+            Dim sbAny As New System.Text.StringBuilder("")
+            Dim strLogInf As String
+            If IsHardDebug = True Then
+                sbAny.Append("[HardDebug]")
+            Else
+                sbAny.Append("[Debug]")
             End If
-            strLogInf &= "][" & dtNow.ToString("yyyy-MM-dd HH:mm:ss.fff") & "][" & System.Diagnostics.Process.GetCurrentProcess.Id.ToString & "." & System.Threading.Thread.CurrentThread.ManagedThreadId.ToString & "]" & LogInf
+            sbAny.Append("[" & Me.AppTitle & "][" & Me.MyClassName & "." & SubName)
+            If StepName <> "" Then
+                sbAny.Append("." & StepName)
+            End If
+            sbAny.Append("]")
+            sbAny.Append(LogInf)
+            strLogInf = "[" & dtNow.ToString("yyyy-MM-dd HH:mm:ss.fff") & "][" & System.Diagnostics.Process.GetCurrentProcess.Id.ToString & "." & System.Threading.Thread.CurrentThread.ManagedThreadId.ToString & "]" & sbAny.ToString
             swAny.WriteLine(strLogInf)
             swAny.Close()
             sfAny.Close()
@@ -190,17 +199,16 @@ Public Class PigBaseMini
 
     Private Function mGetSubErrInf(SubName As String, StepName As String, ByRef exIn As System.Exception, Optional IsStackTrace As Boolean = False, Optional IsSetLastErr As Boolean = False) As String
         Try
-            Dim sbAny As New System.Text.StringBuilder("")
+            Dim sbAny As New System.Text.StringBuilder("[Error]")
+            sbAny.Append("[" & Me.AppTitle & "][")
             sbAny.Append(Me.FullSubName(SubName))
-
             If StepName.Length > 0 Then
-                sbAny.Append("(")
-                sbAny.Append(StepName)
-                sbAny.Append(")")
+                sbAny.Append("." & StepName)
             End If
-            If mstrKeyInf.Length > 0 Then sbAny.Append(";Key:" & mstrKeyInf)
-            sbAny.Append(";ErrInf:")
-            sbAny.Append(exIn.Message)
+            sbAny.Append("]")
+            If mstrKeyInf.Length > 0 Then sbAny.Append("[Key:" & mstrKeyInf & "]")
+            sbAny.Append("[ErrInf:")
+            sbAny.Append(exIn.Message & "]")
             If IsStackTrace = True Then
                 Dim strExStackTrace As String = exIn.StackTrace
                 With strExStackTrace
@@ -210,8 +218,8 @@ Public Class PigBaseMini
                         .Trim()
                     End If
                 End With
-                sbAny.Append(";Trace:")
-                sbAny.Append(strExStackTrace)
+                sbAny.Append("[Trace:")
+                sbAny.Append(strExStackTrace & "]")
             End If
             If IsSetLastErr = True Then mstrLastErr = sbAny.ToString
             mGetSubErrInf = sbAny.ToString

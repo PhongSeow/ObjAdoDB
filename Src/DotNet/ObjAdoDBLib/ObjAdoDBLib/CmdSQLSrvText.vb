@@ -130,7 +130,6 @@ Public Class CmdSQLSrvText
 		Get
 			Dim strStepName As String = ""
 			Try
-				strStepName = "SpName"
 				Dim strDebugStr As String = Me.SQLText & vbCrLf
 				Dim bolIsBegin As Boolean = False
 				If Not moCommand.Parameters Is Nothing Then
