@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server StoredProcedure
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.7
+'* Version: 1.0.8
 '* Create Time: 17/4/2021
 '* 1.0.2	18/4/2021	Modify ActiveConnection
 '* 1.0.3	24/4/2021	Add mAdoDataType
@@ -12,10 +12,11 @@
 '* 1.0.5	28/4/2021	Add ActiveConnection,AddPara,ParaValue,Execute
 '* 1.0.6	16/5/2021	SQLSrvDataTypeEnum move to ConnSQLSrv, Modify Execute,ParaValue,ActiveConnection
 '* 1.0.7	14/7/2021	Add DebugStr,mSQLStr,mGetStr,ParaNameList Modify New
+'* 1.0.8	18/7/2021	Modify DebugStr
 '**********************************
 Public Class CmdSQLSrvSp
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.7"
+	Private Const CLS_VERSION As String = "1.0.8"
 	Private moCommand As Command
 
 	Public Sub New(SpName As String)
@@ -73,6 +74,7 @@ Public Class CmdSQLSrvSp
 				If Not moCommand.Parameters Is Nothing Then
 					Dim strParaNameList As String = Me.ParaNameList
 					Do While True
+						If strParaNameList.Length <= 0 Then Exit Do
 						Dim strParaName As String = Me.mGetStr(strParaNameList, "<", ">")
 						If strParaName = "" Then Exit Do
 						strStepName = "Parameters(" & strParaName & ")"

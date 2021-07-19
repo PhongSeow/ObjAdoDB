@@ -3,7 +3,7 @@
 '* Author: Seow Phong
 '* Describe: Simple JSON class, which can assemble and parse JSON definitions without components.
 '* Home Url: http://www.seowphong.com
-'* Version: 1.0.13
+'* Version: 1.0.15
 '* Create Time: 8/8/2019
 '* 1.0.2    10/8/2020   Code changed from VB6 to VB.NET
 '* 1.0.3    12/8/2020   Some Function debugging 
@@ -17,11 +17,12 @@
 '* 1.0.11   4/4/2021   Modify AddArrayEleBegin,mSrc2JSonStr,mJSonStr2Src,mLng2Date
 '* 1.0.12   4/4/2021   Modify mDate2Lng,mLng2Date
 '* 1.0.13   4/4/2021   Modify AddEle
+'* 1.0.15   19/7/2021  Modify mLng2Date
 '*******************************************************
 Imports System.Text
 Public Class PigJSon
     Inherits PigBaseMini
-    Private Const CLS_VERSION As String = "1.0.13"
+    Private Const CLS_VERSION As String = "1.0.15"
 
     ''' <summary>The type of the JSON element</summary>
     Public Enum xpJSonEleType
@@ -335,7 +336,7 @@ Public Class PigJSon
     Private Function mLng2Date(LngValue As Long, IsLocalTime As Boolean) As DateTime
         Dim dteStart As New DateTime(1970, 1, 1)
         Try
-            If IsLocalTime = True Then
+            If IsLocalTime = False Then
                 mLng2Date = dteStart.AddMilliseconds(LngValue - System.TimeZone.CurrentTimeZone.GetUtcOffset(Now).Hours * 3600000)
             Else
                 mLng2Date = dteStart.AddMilliseconds(LngValue)

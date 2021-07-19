@@ -4,16 +4,17 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server SQL statement Text
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.5
+'* Version: 1.0.6
 '* Create Time: 15/5/2021
 '* 1.0.2	18/4/2021	Modify Execute,ParaValue
 '* 1.0.3	17/5/2021	Modify ParaValue,ActiveConnection,Execute
 '* 1.0.4	14/7/2021	Add DebugStr,mSQLStr
 '* 1.0.5	15/7/2021	Add mSQLStr,mGetStr,ParaNameList Modify DebugStr
+'* 1.0.6	18/7/2021	Modify DebugStr
 '**********************************
 Public Class CmdSQLSrvText
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.5"
+	Private Const CLS_VERSION As String = "1.0.6"
 	Public Property SQLText As String
 	Private moCommand As Command
 
@@ -135,6 +136,7 @@ Public Class CmdSQLSrvText
 				If Not moCommand.Parameters Is Nothing Then
 					Dim strParaNameList As String = Me.ParaNameList
 					Do While True
+						If strParaNameList.Length <= 0 Then Exit Do
 						Dim strParaName As String = Me.mGetStr(strParaNameList, "<", ">")
 						If strParaName = "" Then Exit Do
 						strStepName = "Parameters(" & strParaName & ")"
