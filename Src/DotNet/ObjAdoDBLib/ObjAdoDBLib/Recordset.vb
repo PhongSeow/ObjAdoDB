@@ -23,7 +23,7 @@ Public Class Recordset
 	Inherits PigBaseMini
 	Private Const CLS_VERSION As String = "1.0.13"
 	Public Obj As Object
-	Private moPigJSon As PigJSon
+	Private moPigJSon As PigJSonLite
 	Private mstrColNameList As String
 	Public Sub New()
 		MyBase.New(CLS_VERSION)
@@ -819,7 +819,7 @@ Public Class Recordset
 		Const SUB_NAME As String = "Row2JSon"
 		Dim strStepName As String = ""
 		Try
-			Dim pjMain As New PigJSon
+			Dim pjMain As New PigJSonLite
 			With pjMain
 				strStepName = "Chk EOF"
 				If Me.EOF = False Then
@@ -862,7 +862,7 @@ Public Class Recordset
 					'	End If
 					'Next
 					strStepName = "AddSymbol"
-					.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+					.AddSymbol(PigJSonLite.xpSymbolType.EleEndFlag)
 				End If
 			End With
 			Row2JSon = pjMain.MainJSonStr
@@ -911,8 +911,8 @@ Public Class Recordset
 		Dim strStepName As String = ""
 		Try
 			Dim intRSNo As Integer = 0
-			strStepName = "New PigJSon"
-			Dim pjMain As New PigJSon
+			strStepName = "New PigJSonLite"
+			Dim pjMain As New PigJSonLite
 			If pjMain.LastErr <> "" Then Throw New Exception(pjMain.LastErr)
 			pjMain.AddArrayEleBegin("RS", True)
 			Dim strRsJSon As String
@@ -936,9 +936,9 @@ Public Class Recordset
 				rsSub = rsParent.NextRecordset
 				If rsParent.LastErr <> "" Then Exit Do
 			Loop
-			pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+			pjMain.AddSymbol(PigJSonLite.xpSymbolType.ArrayEndFlag)
 			pjMain.AddEle("TotalRS", intRSNo)
-			pjMain.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+			pjMain.AddSymbol(PigJSonLite.xpSymbolType.EleEndFlag)
 			AllRecordset2JSon = pjMain.MainJSonStr
 			Me.ClearErr()
 		Catch ex As Exception
@@ -957,8 +957,8 @@ Public Class Recordset
 		Dim strStepName As String = ""
 		Try
 			Dim intRowNo As Integer = 0
-			strStepName = "New PigJSon"
-			Dim pjMain As New PigJSon
+			strStepName = "New PigJSonLite"
+			Dim pjMain As New PigJSonLite
 			If pjMain.LastErr <> "" Then Throw New Exception(pjMain.LastErr)
 			pjMain.AddArrayEleBegin("ROW", True)
 			Do While Not Me.EOF
@@ -977,11 +977,11 @@ Public Class Recordset
 				Me.MoveNext()
 				If Me.LastErr <> "" Then Throw New Exception(Me.LastErr)
 			Loop
-			'			If intRowNo > 0 Then pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
-			pjMain.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+			'			If intRowNo > 0 Then pjMain.AddSymbol(PigJSonLite.xpSymbolType.ArrayEndFlag)
+			pjMain.AddSymbol(PigJSonLite.xpSymbolType.ArrayEndFlag)
 			pjMain.AddEle("TotalRows", intRowNo)
 			pjMain.AddEle("IsEOF", Me.EOF)
-			pjMain.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+			pjMain.AddSymbol(PigJSonLite.xpSymbolType.EleEndFlag)
 			Recordset2JSon = pjMain.MainJSonStr
 			Me.ClearErr()
 		Catch ex As Exception
@@ -1025,13 +1025,13 @@ Public Class Recordset
 	'									.AddEle(oField.Name, oField.ValueForJSon)
 	'								End If
 	'							Next
-	'							.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+	'							.AddSymbol(PigJSonLite.xpSymbolType.EleEndFlag)
 	'						End With
 	'						.AddArrayEleValue(pjRow.MainJSonStr)
 	'					Loop
-	'					.AddSymbol(PigJSon.xpSymbolType.ArrayEndFlag)
+	'					.AddSymbol(PigJSonLite.xpSymbolType.ArrayEndFlag)
 	'					.AddEle("Rows", intRows)
-	'					.AddSymbol(PigJSon.xpSymbolType.EleEndFlag)
+	'					.AddSymbol(PigJSonLite.xpSymbolType.EleEndFlag)
 	'				End With
 	'				mRecordset2JSon = pjMain
 	'			Case mRs2JSonTypeEnum.AllRecordset

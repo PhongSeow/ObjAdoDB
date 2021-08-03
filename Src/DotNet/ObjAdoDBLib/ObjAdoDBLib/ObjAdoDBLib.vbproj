@@ -3,17 +3,10 @@
   <PropertyGroup>
     <RootNamespace>ObjAdoDBLib</RootNamespace>
     <TargetFrameworks>net20;net30;net35;net40;net45;</TargetFrameworks>
-    <Authors>Seow Phong</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Company>Seow Phong Studio</Company>
-    <Copyright>Copyright (c) 2021 Seow Phong</Copyright>
-    <PackageIcon>SeowPhongLogo.png</PackageIcon>
-    <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBLib</RepositoryUrl>
-    <RepositoryType>GIT</RepositoryType>
-    <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon SQLServer StoredProcedure ConnSQLSrv mirror High availability Automatic</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.7.3</Version>
+    <Version>1.1.7.16</Version>
+    <Authors>Seow Phong</Authors>
+    <Company>Seow Phong Studio</Company>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 The msado15.dll required. Windows will be installed it in advance.
 Using this library, you can easily upgrade VB6 and ASP code to .net platform.
@@ -22,18 +15,16 @@ The interface between different databases is simplified.
 Support the transformation of query results into JSON.
 Friendly calling interface for Command of SQL Server StoredProcedure and SQL statement Text.
 Support automatic switch connection of mirror database for high availability.</Description>
-    <PackageReleaseNotes>Fix bugs for ParseJSON, add UnlockEndSymbol for insert JSon item.</PackageReleaseNotes>
-    <AssemblyVersion>1.1.7.3</AssemblyVersion>
-    <FileVersion>1.1.7.3</FileVersion>
+    <Copyright>Copyright (c) 2021 Seow Phong</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
+    <PackageIcon>SeowPhongLogo.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBLib</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon SQLServer StoredProcedure ConnSQLSrv mirror High availability Automatic</PackageTags>
+    <PackageReleaseNotes>Use PigJSonLite Lite instead of PigJSon.</PackageReleaseNotes>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net20|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="My Project\" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="SeowPhongLogo.png">
