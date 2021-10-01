@@ -39,6 +39,7 @@ Public Class ConsoleDemo
             Console.WriteLine("Press I to Test JSon")
             Console.WriteLine("Press J to Execute SQL Server StoredProcedure")
             Console.WriteLine("Press K to Execute SQL Server SQL statement Text")
+            Console.WriteLine("Press N to Test Cache Query")
             Console.WriteLine("*******************")
             Select Case Console.ReadKey().Key
                 Case ConsoleKey.Q
@@ -389,6 +390,33 @@ Public Class ConsoleDemo
                         End If
                         Console.WriteLine("DebugStr=" & .DebugStr)
                     End With
+                Case ConsoleKey.N
+                    Console.WriteLine("*******************")
+                    Console.WriteLine("Test Cache Query")
+                    Console.WriteLine("*******************")
+                    If Me.ConnSQLSrv Is Nothing Then
+                        Console.WriteLine("ConnSQLSrv Is Nothing")
+                    ElseIf Me.ConnSQLSrv.IsDBConnReady = False Then
+                        Console.WriteLine("ConnSQLSrv.IsDBConnReady=" & Me.ConnSQLSrv.IsDBConnReady)
+                    Else
+                        Dim oCmdSQLSrvText As New CmdSQLSrvText("select * from sysobjects where name=?")
+                        oCmdSQLSrvText.ActiveConnection = Me.ConnSQLSrv.Connection
+                        oCmdSQLSrvText.AddPara("@name", SqlDbType.VarChar, 256)
+                        Console.WriteLine("Input db object name=sysobjects")
+                        Dim strName As String = Console.ReadLine()
+                        If strName = "" Then strName = "sysobjects"
+                        oCmdSQLSrvText.ParaValue("@name") = strName
+                        Dim strKeyName As String = oCmdSQLSrvText.KeyName
+                        Console.WriteLine("InitPigKeyValue=")
+                        Me.ConnSQLSrv.InitPigKeyValue()
+                        Console.WriteLine(Me.ConnSQLSrv.LastErr)
+                        Console.WriteLine("Before IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
+                        Console.WriteLine("CacheQuery=")
+                        Dim strJSon As String = oCmdSQLSrvText.CacheQuery(Me.ConnSQLSrv)
+                        Console.WriteLine(oCmdSQLSrvText.LastErr)
+                        Console.WriteLine("After IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
+                        Console.WriteLine("JSon=" & strJSon)
+                    End If
             End Select
         Loop
     End Sub

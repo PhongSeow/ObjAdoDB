@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Connection for SQL Server
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.0.9
+'* Version: 1.1
 '* Create Time: 2/5/2021
 '* 1.0.2	18/4/2021	Modify OpenOrKeepActive
 '* 1.0.3	6/5/2021	Modify CommandTimeout, add IsDBConnReady
@@ -14,12 +14,15 @@
 '* 1.0.8	14/6/2021	Add RefMirrSrvTime,LastRefMirrSrvTime
 '* 1.0.9	15/6/2021	Modify OpenOrKeepActive,mIsDBOnline
 '* 1.0.10	16/6/2021	Modify OpenOrKeepActive
+'* 1.1		1/10/2021	Add PigKeyValueApp,InitPigKeyValue
 '**********************************
+Imports PigKeyCacheLib
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.0.10"
+	Private Const CLS_VERSION As String = "1.1.2"
 	Public Connection As Connection
 	Private mcstChkDBStatus As CmdSQLSrvText
+	Public PigKeyValueApp As PigKeyValueApp
 
 
 	Public Enum SQLSrvDataTypeEnum
@@ -511,5 +514,15 @@ Public Class ConnSQLSrv
 			End Try
 		End Get
 	End Property
+
+	Public Sub InitPigKeyValue()
+		Try
+			Me.PigKeyValueApp = New PigKeyValueApp(Me.Connection.ConnectionString)
+			If Me.PigKeyValueApp.LastErr <> "" Then Throw New Exception(Me.PigKeyValueApp.LastErr)
+			Me.ClearErr()
+		Catch ex As Exception
+			Me.SetSubErrInf("InitPigKeyValue", ex)
+		End Try
+	End Sub
 
 End Class
