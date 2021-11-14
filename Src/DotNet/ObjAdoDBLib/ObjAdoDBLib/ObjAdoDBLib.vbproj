@@ -4,7 +4,7 @@
     <RootNamespace>ObjAdoDBLib</RootNamespace>
     <TargetFrameworks>net20;net30;net35;net40;net45;</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.2.28</Version>
+    <Version>1.2.32</Version>
     <Authors>Seow Phong</Authors>
     <Company>Seow Phong Studio</Company>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
@@ -24,7 +24,7 @@ Support cache query.</Description>
     <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBLib</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon SQLServer StoredProcedure ConnSQLSrv mirror High availability Automatic cache query</PackageTags>
-    <PackageReleaseNotes>Optimization cache query function and Reference the latest class library.</PackageReleaseNotes>
+    <PackageReleaseNotes>Optimization and Reference the latest class library.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,7 +39,7 @@ Support cache query.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PigKeyCacheLib" Version="1.5.68" />
+    <PackageReference Include="PigKeyCacheLib" Version="1.6.8" />
   </ItemGroup>
 
 </Project>
