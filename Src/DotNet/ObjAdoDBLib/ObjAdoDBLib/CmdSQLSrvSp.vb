@@ -4,7 +4,7 @@
 '* License: Copyright (c) 2020 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
 '* Describe: Command for SQL Server StoredProcedure
 '* Home Url: https://www.seowphong.com or https://en.seowphong.com
-'* Version: 1.1
+'* Version: 1.2
 '* Create Time: 17/4/2021
 '* 1.0.2	18/4/2021	Modify ActiveConnection
 '* 1.0.3	24/4/2021	Add mAdoDataType
@@ -14,11 +14,12 @@
 '* 1.0.7	14/7/2021	Add DebugStr,mSQLStr,mGetStr,ParaNameList Modify New
 '* 1.0.8	18/7/2021	Modify DebugStr
 '* 1.1		1/10/2021	Add KeyName,CacheQuery
+'* 1.2		20/12/2021	Modify CacheQuery
 '**********************************
 Imports PigKeyCacheLib
 Public Class CmdSQLSrvSp
 	Inherits PigBaseMini
-	Private Const CLS_VERSION As String = "1.1.2"
+	Private Const CLS_VERSION As String = "1.2.2"
 	Private moCommand As Command
 
 	Public Sub New(SpName As String)
@@ -282,7 +283,7 @@ Public Class CmdSQLSrvSp
 	''' The cache query returns Recordset.AllRecordset2JSon. Note that for SQL statements with updated data, using the cache query may have unpredictable results.
 	''' </summary>
 	''' <returns></returns>
-	Public Function CacheQuery(ByRef ConnSQLSrv As ConnSQLSrv, Optional CacheTime As Integer = 60) As String
+	Public Function CacheQuery(ByRef ConnSQLSrv As ConnSQLSrv, Optional CacheTime As Integer = 60, Optional TextType As PigToolsLiteLib.PigText.enmTextType = PigToolsLiteLib.PigText.enmTextType.Unicode) As String
 		Dim strStepName As String = ""
 		Try
 			With ConnSQLSrv
@@ -307,7 +308,7 @@ Public Class CmdSQLSrvSp
 					rsAny = Me.Execute
 					If Me.LastErr <> "" Then Throw New Exception(.LastErr)
 					strStepName = "New PigKeyValue"
-					oPigKeyValue = New PigKeyValue(strKeyName, Now.AddSeconds(CacheTime), rsAny.AllRecordset2JSon)
+					oPigKeyValue = New PigKeyValue(strKeyName, Now.AddSeconds(CacheTime), rsAny.AllRecordset2JSon, TextType, PigKeyValue.EnmSaveType.SaveSpace)
 					If oPigKeyValue.LastErr <> "" Then Throw New Exception(oPigKeyValue.LastErr)
 					strStepName = "PigKeyValueApp.SavePigKeyValue"
 					.PigKeyValueApp.SavePigKeyValue(oPigKeyValue)
