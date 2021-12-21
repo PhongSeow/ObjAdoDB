@@ -410,11 +410,11 @@ Public Class ConsoleDemo
                         Console.WriteLine("InitPigKeyValue=")
                         Me.ConnSQLSrv.InitPigKeyValue()
                         Console.WriteLine(Me.ConnSQLSrv.LastErr)
-                        Console.WriteLine("Before IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
+                        'Console.WriteLine("Before IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
                         Console.WriteLine("CacheQuery=")
                         Dim strJSon As String = oCmdSQLSrvText.CacheQuery(Me.ConnSQLSrv)
                         Console.WriteLine(oCmdSQLSrvText.LastErr)
-                        Console.WriteLine("After IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
+                        'Console.WriteLine("After IsPigKeyValueExists(" & strKeyName & ")=" & Me.ConnSQLSrv.PigKeyValueApp.IsPigKeyValueExists(strKeyName))
                         Console.WriteLine("JSon=" & strJSon)
                     End If
             End Select

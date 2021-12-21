@@ -12,9 +12,10 @@
 	  <PackageProjectUrl>https://en.seowphong.com/oss/ObjAdoDB/</PackageProjectUrl>
 	  <RepositoryType>GIT</RepositoryType>
 	  <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBDemo</RepositoryUrl>
-	  <Version>1.3.1</Version>
+	  <Version>1.3.8</Version>
 	  <PackageTags>ObjAdoDBLib Ado AdoDB VB6 ASP</PackageTags>
 	  <PackageReleaseNotes>Reference the latest class library.</PackageReleaseNotes>
+	  <AssemblyVersion>1.3.8.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ObjAdoDBLib" Version="1.3.2" />
+    <PackageReference Include="ObjAdoDBLib" Version="1.3.28" />
   </ItemGroup>
 
 </Project>
