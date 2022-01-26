@@ -1,4 +1,15 @@
-﻿Imports ObjAdoDBLib
+﻿'**********************************
+'* Name: ConsoleDemo
+'* Author: Seow Phong
+'* License: Copyright (c) 2020-2022 Seow Phong, For more details, see the MIT LICENSE file included with this distribution.
+'* Describe: ConsoleDemo for ObjAdoDBLib
+'* Home Url: https://www.seowphong.com or https://en.seowphong.com
+'* Version: 1.1
+'* Create Time: 18/2/2021
+'* 1.1	23/1/2022	Refer to PigConsole.Getpwdstr of PigCmdLib  is used to hide the entered password.
+'**********************************
+Imports ObjAdoDBLib
+Imports PigCmdLib
 
 Public Class ConsoleDemo
     Public Conn As New Connection
@@ -17,6 +28,7 @@ Public Class ConsoleDemo
     Public CurrConsoleKey As ConsoleKey
     Public InpStr As String
     Public AccessFilePath As String
+    Public PigConsole As New PigConsole
 
     Public Sub Main()
         With Me.Conn
@@ -41,7 +53,8 @@ Public Class ConsoleDemo
             Console.WriteLine("Press K to Execute SQL Server SQL statement Text")
             Console.WriteLine("Press N to Test Cache Query")
             Console.WriteLine("*******************")
-            Select Case Console.ReadKey().Key
+            Console.CursorVisible = False
+            Select Case Console.ReadKey(True).Key
                 Case ConsoleKey.Q
                     Exit Do
                 Case ConsoleKey.A
@@ -53,11 +66,12 @@ Public Class ConsoleDemo
                     Console.WriteLine("Press B to SQL Server(Mirror mode)")
                     Console.WriteLine("Press C to Access")
                     Do While True
-                        Me.CurrConsoleKey = Console.ReadKey().Key
+                        Me.CurrConsoleKey = Console.ReadKey(True).Key
                         Select Case Me.CurrConsoleKey
                             Case ConsoleKey.Q
                                 Exit Do
                             Case ConsoleKey.A
+                                Console.CursorVisible = True
                                 Me.DBType = Connection.DBTypeEnum.SQLServer
                                 Console.WriteLine("Is Use Microsoft SQL Server OLEDB ? (Y/n)")
                                 Me.InpStr = Console.ReadLine()
@@ -88,12 +102,13 @@ Public Class ConsoleDemo
                                         If Me.DBUser = "" Then Me.DBUser = "sa"
                                         Console.WriteLine("DB User=" & Me.DBUser)
                                         Console.WriteLine("Input DB Password:")
-                                        Me.DBPwd = Console.ReadLine()
-                                        Console.WriteLine("DB Password=" & Me.DBPwd)
+                                        Me.DBPwd = Me.PigConsole.GetPwdStr
+                                        'Console.WriteLine("DB Password=" & Me.DBPwd)
                                         Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.CurrDB, Me.DBUser, Me.DBPwd, Me.ProviderSQLSrv)
                                 End Select
                                 Exit Do
                             Case ConsoleKey.B
+                                Console.CursorVisible = True
                                 Me.DBType = Connection.DBTypeEnum.SQLServer
                                 Console.WriteLine("Is Use Microsoft SQL Server OLEDB ? (Y/n)")
                                 Me.InpStr = Console.ReadLine()
@@ -128,8 +143,8 @@ Public Class ConsoleDemo
                                         If Me.DBUser = "" Then Me.DBUser = "sa"
                                         Console.WriteLine("DB User=" & Me.DBUser)
                                         Console.WriteLine("Input DB Password:")
-                                        Me.DBPwd = Console.ReadLine()
-                                        Console.WriteLine("DB Password=" & Me.DBPwd)
+                                        Me.DBPwd = Me.PigConsole.GetPwdStr
+                                        'Console.WriteLine("DB Password=" & Me.DBPwd)
                                         Me.ConnSQLSrv = New ConnSQLSrv(Me.DBSrv, Me.MirrDBSrv, Me.CurrDB, Me.DBUser, Me.DBPwd, Me.ProviderSQLSrv)
                                 End Select
                                 Exit Do
@@ -184,9 +199,10 @@ Public Class ConsoleDemo
                     End Select
                 Case ConsoleKey.D
                     Console.WriteLine("#################")
-                            Console.WriteLine("Create Recordset with Execute")
-                            Console.WriteLine("#################")
-                            Console.WriteLine("Input SQL:")
+                    Console.WriteLine("Create Recordset with Execute")
+                    Console.WriteLine("#################")
+                    Console.CursorVisible = True
+                    Console.WriteLine("Input SQL:")
                     Select Case Me.DBType
                         Case Connection.DBTypeEnum.SQLServer
                             Me.SQL = Console.ReadLine()
@@ -309,7 +325,7 @@ Public Class ConsoleDemo
                     Console.WriteLine("Press B to Convert current recordset to JSON")
                     Console.WriteLine("Press C to Convert all recordset to JSON")
                     Do While True
-                        Me.CurrConsoleKey = Console.ReadKey().Key
+                        Me.CurrConsoleKey = Console.ReadKey(True).Key
                         Select Case Me.CurrConsoleKey
                             Case ConsoleKey.Q
                                 Exit Do
