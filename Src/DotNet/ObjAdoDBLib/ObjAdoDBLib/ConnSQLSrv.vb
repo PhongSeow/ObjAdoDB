@@ -16,7 +16,6 @@
 '* 1.0.10	16/6/2021	Modify OpenOrKeepActive
 '* 1.1		1/10/2021	Add PigKeyValueApp,InitPigKeyValue
 '**********************************
-Imports PigKeyCacheLib
 Public Class ConnSQLSrv
 	Inherits PigBaseMini
 	Private Const CLS_VERSION As String = "1.1.2"

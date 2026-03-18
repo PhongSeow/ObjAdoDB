@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TestObjAdoDB", "TestObjAdoDB\TestObjAdoDB.vbproj", "{A489AA09-952C-4BE5-9A2B-5132EDCC72BD}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ObjAdoDBLib", "..\ObjAdoDBLib\ObjAdoDBLib\ObjAdoDBLib.vbproj", "{EE92145A-40E1-4A01-8295-1CABD5CBC92A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A489AA09-952C-4BE5-9A2B-5132EDCC72BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A489AA09-952C-4BE5-9A2B-5132EDCC72BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A489AA09-952C-4BE5-9A2B-5132EDCC72BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A489AA09-952C-4BE5-9A2B-5132EDCC72BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE92145A-40E1-4A01-8295-1CABD5CBC92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE92145A-40E1-4A01-8295-1CABD5CBC92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE92145A-40E1-4A01-8295-1CABD5CBC92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE92145A-40E1-4A01-8295-1CABD5CBC92A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52007727-0470-476E-93A0-96304B4757AD}
+	EndGlobalSection
+EndGlobal

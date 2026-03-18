@@ -14,7 +14,6 @@
 '* 1.1		1/10/2021	Add KeyName,CacheQuery
 '* 1.2		20/12/2021	Modify CacheQuery
 '**********************************
-Imports PigKeyCacheLib
 Public Class CmdSQLSrvText
 	Inherits PigBaseMini
 	Private Const CLS_VERSION As String = "1.2.3"

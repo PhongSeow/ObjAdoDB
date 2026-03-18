@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <RootNamespace>ObjAdoDBLib</RootNamespace>
-    <TargetFrameworks>net20;net30;net35;net48;</TargetFrameworks>
+    <TargetFrameworks>net20;net30;net35;net40;net45;net46;net48;</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.6.12</Version>
+    <Version>1.6.23</Version>
     <Authors>Seow Phong</Authors>
     <Company>Seow Phong Studio</Company>
     <Description>This is a .net library and NuGet package that maps Microsoft ActiveX data objects library. It can be used in different .net frameworks.
 </Description>
-    <Copyright>Copyright (c) 2021-2022 Seow Phong</Copyright>
+    <Copyright>Copyright (c) 2021-2026 Seow Phong</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://en.seowphong.com</PackageProjectUrl>
     <PackageIcon>SeowPhongLogo.png</PackageIcon>
@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/PhongSeow/ObjAdoDB/tree/master/Src/DotNet/ObjAdoDBLib</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>ObjAdoDBLib ADO ADODB VB6 ASP msado15.dll Microsoft ActiveX Data Objects Library Command Connection Parameter Property Recordset Stream Row2JSon JSon Recordset2JSon SQLServer StoredProcedure ConnSQLSrv mirror High availability Automatic cache query</PackageTags>
-    <PackageReleaseNotes>Update readme.</PackageReleaseNotes>
+    <PackageReleaseNotes>Revive.</PackageReleaseNotes>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -33,14 +33,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PigKeyCacheLib" Version="3.5.50" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Readme.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PigToolsLiteLib" Version="3.6.20" />
   </ItemGroup>
 
 </Project>
